@@ -4,6 +4,20 @@
     margin-top: 30px;
 }
 
+.demo-ribbon {
+  width: 100%;
+  height: 40vh;
+  background-color: #9C27B0;
+ 
+}
+.content{
+ margin-top: -35vh;
+}
+
+.padding20{
+    padding: 20px;
+}
+
 .left{
 float:left;
 width:75%;

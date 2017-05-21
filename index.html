@@ -34,47 +34,53 @@
 </head>
 
 <body>
-    <div class="center">
-        <div class="center">
-            <div class="mdl-typography--display-3">
-                Welcome to notification sender
+    <header class="mdl-layout__header">
+    </header>
+    <div class="demo-ribbon"></div>
+    <div class="center content  mdl-card mdl-shadow--2dp">
+        <div class="padding20">
+            <div>
+                <h2 class="mdl-typography--display-3">
+                    Welcome to FCM Utils
+                </h2>
+            </div>
+
+            <div class="mdl-typography--headline">
+                Start with verifying your token,<br>
+                Enter your API key and FCM token to get started
+            </div>
+
+            <div class="sides">
+                <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="txtApplicationKey">
+                    <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
+                </div>
+                <div class="right topMargin50">
+                    <i id="apiKey" class="material-icons">help_outline</i>
+
+                </div>
+                <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="apiKey">
+                    You can get it from Firebase > Project Settings > Web Api Key
+                </div>
+            </div>
+            <div class="sides">
+                <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="txtToken">
+                    <label class="mdl-textfield__label" for="txtToken">FCM Device token</label>
+                </div>
+                <div class="right topMargin50">
+                    <i id="token" class="material-icons">help_outline</i>
+                </div>
+                <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="token">
+                    Your FCM Device token
+                </div>
             </div>
         </div>
-
-        <div class="center mdl-typography--display-2">
-            Enter your API key to get started
-        </div>
-
-        <div class="sides">
-            <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="txtApplicationKey">
-                <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
-            </div>
-            <div class="right topMargin50">
-                <i id="apiKey" class="material-icons">help_outline</i>
-
-            </div>
-            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="apiKey">
-                You can get it from Firebase > Project Settings > Web Api Key
-            </div>
-        </div>
-        <div class="sides">
-            <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="txtToken">
-                <label class="mdl-textfield__label" for="txtToken">FCM Device token</label>
-            </div>
-            <div class="right topMargin50">
-                <i id="token" class="material-icons">help_outline</i>
-            </div>
-            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="token">
-                Your FCM Device token
-            </div>
-        </div>
-
-
-        <button id="verifyTokens" class="center mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">
+        <div class="mdl-card__actions mdl-card--border">
+            <button id="verifyTokens" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
               Verify Tokens
         </button>
+        </div>
         <div id="response" class="center mdl-typography--display-5"></div>
 
     </div>
