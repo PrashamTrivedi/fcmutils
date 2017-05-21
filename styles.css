@@ -1,0 +1,19 @@
+.center{
+    margin: auto;
+    width: 80%;
+    margin-top: 30px;
+}
+
+.left{
+float:left;
+width:75%;
+overflow:hidden;
+}
+.topMargin50{
+    margin-top: 50px;
+}
+.right{
+float:left;
+width:25%;
+overflow:hidden;
+} 
