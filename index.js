@@ -1,30 +1,30 @@
-
-
-
-$(document).ready(function () {
-    $('#verifyTokens').click(function () {
+$(document).ready(function() {
+    $("#spinner").hide();
+    $('#verifyTokens').click(function() {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
-         getInstanceIdInfo(token, key)
+        getInstanceIdInfo(token, key)
     });
 
 
     function getInstanceIdInfo(instanceId, key) {
-
+        $("#spinner").show();
         var settings = {
             method: "GET",
             url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
             contentType: "application/json; charset=utf-8",
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Key=" + key);
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "key=" + key);
             },
-            success: function (data) {
+            success: function(data) {
                 console.log(data)
-                $("#response").text(data);
+                $("#spinner").hide();
+                $("#response").text(JSON.stringify(data));
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
+                $("#spinner").hide();
                 $("#response").text(err.error);
                 console.log(err)
 
