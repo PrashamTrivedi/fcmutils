@@ -1,6 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#spinner").hide();
-    $('#verifyTokens').click(function() {
+    $("#response").hide();
+    $('#verifyTokens').click(function () {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
@@ -14,19 +15,31 @@ $(document).ready(function() {
             method: "GET",
             url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
             contentType: "application/json; charset=utf-8",
-            beforeSend: function(request) {
+            beforeSend: function (request) {
                 request.setRequestHeader("Authorization", "key=" + key);
             },
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 $("#spinner").hide();
-                $("#response").text(JSON.stringify(data));
+
+                if (data.platform == "ANDROID") {
+                    $("#platformIcon").text("phone_android")
+                } else if (data.platform == "IOS") {
+                    $("#platformIcon").text("phone_iphone")
+                } else if (data.platform == "CHROME") {
+                    $("#platformIcon").text("laptop_chromebook")
+                }
+                $('#appName').val(data.application+" Version("+data.applicationVersion+")")
+                // $('#appName').attr('disabled', 'disabled');
+                $("#response").show();
+                // $("#response").text(JSON.stringify(data));
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
                 $("#spinner").hide();
                 $("#response").text(err.error);
                 console.log(err)
+                $("#response").show();
 
             }
         }
