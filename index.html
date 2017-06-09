@@ -28,6 +28,7 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="testing.js"></script>
     <script src="index.js"></script>
 
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -86,18 +87,17 @@
         <div class="centerAutoWidth mdl-spinner mdl-js-spinner is-active" id="spinner"></div>
         <div id="response" class="mdl-typography--display-5">
 
-            <form action="#">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label">
-                    <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" for="appName">
-                    <i class="material-icons" id="platformIcon"></i>
-                </label>
-                    <div class="mdl-textfield__expandable-holder">
-                        <input class="mdl-textfield__input"  type="text" id="appName">
-                        <label class="mdl-textfield__label" for="appName">Expandable Input</label>
-                    </div>
-                </div>
-            </form>
+
+            <div class="sides">
+                <i class="leftInverse material-icons" id="platformIcon"></i>
+                <div id="appName" class="rightInverse"></div>
+            </div>
+            <div class="sides">
+                <i class="leftInverse material-icons" id="platformIcon"></i>
+                <div id="appName" class="rightInverse"></div>
+            </div>
         </div>
+    </div>
     </div>
 
 </body>

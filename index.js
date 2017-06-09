@@ -5,6 +5,12 @@ $(document).ready(function () {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
+        if(key==""){
+            key = testingApiKey
+        }
+        if(token==""){
+            token=testingToken
+        }
         getInstanceIdInfo(token, key)
     });
 
@@ -16,7 +22,7 @@ $(document).ready(function () {
             url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
             contentType: "application/json; charset=utf-8",
             beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "key=" + key);
+                request.addRequestHeader("Authorization", "key=" + key);
             },
             success: function (data) {
                 console.log(data)
@@ -29,7 +35,7 @@ $(document).ready(function () {
                 } else if (data.platform == "CHROME") {
                     $("#platformIcon").text("laptop_chromebook")
                 }
-                $('#appName').val(data.application+" Version("+data.applicationVersion+")")
+                $('#appName').text(data.application+" Version("+data.applicationVersion+")")
                 // $('#appName').attr('disabled', 'disabled');
                 $("#response").show();
                 // $("#response").text(JSON.stringify(data));

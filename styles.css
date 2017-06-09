@@ -28,6 +28,11 @@
     overflow: hidden;
 }
 
+.leftInverse {
+    float: left;
+    width: auto;
+    overflow: hidden;
+}
 .topMargin50 {
     margin-top: 50px;
 }
@@ -35,5 +40,11 @@
 .right {
     float: left;
     width: 25%;
+    overflow: hidden;
+}
+
+.rightInverse {
+    float: left;
+    width: auto;
     overflow: hidden;
 }
