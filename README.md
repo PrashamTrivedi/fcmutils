@@ -22,7 +22,10 @@ Reference : [InstanceId Server reference-Device Info](https://developers.google.
 
 Using above apis soon, it will know topics subscribed to given device and will let you manage topics subscription and removal.
 
+
+
 Reference : [InstanceId Server reference-Managing Topics](https://developers.google.com/instance-id/reference/server#create_relationship_maps_for_app_instances)
+*This api currently supports adding topics, removing topics is not supported as of now*
 
 ## Construct and send notification
 
