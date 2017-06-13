@@ -22,7 +22,7 @@ $(document).ready(function () {
             url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
             contentType: "application/json; charset=utf-8",
             beforeSend: function (request) {
-                request.addRequestHeader("Authorization", "key=" + key);
+                request.setRequestHeader("Authorization", "key=" + key);
             },
             success: function (data) {
                 console.log(data)
