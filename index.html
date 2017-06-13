@@ -38,19 +38,20 @@
     <header class="mdl-layout__header">
     </header>
     <div class="demo-ribbon"></div>
-    <div class="center content  mdl-card mdl-shadow--2dp">
-        <div class="padding20">
-            <div>
-                <h2 class="mdl-typography--display-3">
-                    Welcome to FCM Utils
-                </h2>
-            </div>
+    <div class="content">
+        <div class="center  mdl-card mdl-shadow--2dp">
+            <div class="padding20">
+                <div>
+                    <h2 class="mdl-typography--display-3">
+                        Welcome to FCM Utils
+                    </h2>
+                </div>
 
-            <div class="mdl-typography--headline">
-                Start with verifying your token,<br> Enter your API key and FCM token to get started
-            </div>
+                <div class="mdl-typography--headline">
+                    Start with verifying your token,<br> Enter your API key and FCM token to get started
+                </div>
 
-            <form autocomplete="on">
+
                 <div class="sides">
                     <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" id="txtApplicationKey" autocomplete="on">
@@ -77,27 +78,55 @@
                         Your FCM Device token
                     </div>
                 </div>
-        </div>
-        </form>
-        <div class="mdl-card__actions mdl-card--border">
-            <button id="verifyTokens" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-              Verify Tokens
-        </button>
-        </div>
-        <div class="centerAutoWidth mdl-spinner mdl-js-spinner is-active" id="spinner"></div>
-        <div id="response" class="mdl-typography--display-5">
-
-
-            <div class="sides">
-                <i class="leftInverse material-icons" id="platformIcon"></i>
-                <div id="appName" class="rightInverse"></div>
             </div>
-            <div class="sides">
-                <i class="leftInverse material-icons" id="platformIcon"></i>
-                <div id="appName" class="rightInverse"></div>
+
+            <div class="mdl-card__actions mdl-card--border">
+                <button id="verifyTokens" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    Verify Tokens
+                </button>
+                <button id="sendNotification" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    Send Notification
+                </button>
+                <button id="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    Manage Topics
+                </button>
+            </div>
+            <div class="centerAutoWidth mdl-spinner mdl-js-spinner is-active" id="spinner"></div>
+            <div id="response" class="padding20 mdl-typography--display-5">
+
+
+                <div class="sides">
+                    <i class="leftInverse material-icons" id="platformIcon"></i>
+                    <div id="appName" class="rightInverse"></div>
+                </div>
+                <div class="sides">
+                    <i class="leftInverse material-icons" id="platformIcon"></i>
+                    <div id="appName" class="rightInverse"></div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div id="topics" class="center padding20 mdl-card mdl-shadow--2dp">
+            <h3>Manage your topics here</h3>
+            <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
+                <label class="mdl-textfield__label" for="txtTopics">Enter Topics to manage</label>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <ul id="topicsList" class="demo-list-two mdl-list">
+                </ul>
+                <button id="updateTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    Update Topics
+                </button>
             </div>
         </div>
     </div>
-    </div>
 
+    <div id="snackbarMessage" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
 </body>
