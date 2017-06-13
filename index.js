@@ -104,10 +104,10 @@ function getInstanceIdInfo(instanceId, key) {
 
         },
         error: function(xhr, status, error) {
-            var err = JSON.parse(xhr.responseText);
+            var err = xhr.responseText;
             $("#spinner").hide();
-            $("#response").text(err.error);
             console.log(err)
+            $("#response").text("Error in checking data, Please check console for details");
             $("#response").show();
 
         }
