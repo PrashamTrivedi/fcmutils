@@ -3,14 +3,16 @@ var token;
 var topics;
 var platform;
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#spinner").hide();
     $("#response").hide();
     $("#sendNotification").hide();
     $("#manageTopics").hide();
     $("#topics").hide();
+    $("#topicDiv").hide();
+    $("#notificationDiv").hide();
 
-    $('#verifyTokens').click(function () {
+    $('#verifyTokens').click(function() {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
@@ -23,11 +25,15 @@ $(document).ready(function () {
         getInstanceIdInfo(token, key);
     });
 
-    $("#updateTopics").click(function () {
+    $("#sendNotification").click(function() {
+        $("#notificationDiv").show();
+    })
+
+    $("#updateTopics").click(function() {
         var topics = $("#txtTopics").val()
         updateTopics(topics);
     })
-    $("#manageTopics").click(function () {
+    $("#manageTopics").click(function() {
         $("#topics").show()
     })
 })
@@ -40,10 +46,10 @@ function getInstanceIdInfo(instanceId, key) {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function (request) {
+        beforeSend: function(request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function (data) {
+        success: function(data) {
             console.log(data)
             $("#spinner").hide();
 
@@ -59,18 +65,19 @@ function getInstanceIdInfo(instanceId, key) {
             $("#sendNotification").show();
             $("#manageTopics").show();
             if (data.rel != undefined && data.rel.topics != undefined) {
+                $("#topicDiv").show();
                 for (var topic in data.rel.topics) {
                     var topicName = topic;
-                    var topicDate=data.rel.topics[topic].addDate 
+                    var topicDate = data.rel.topics[topic].addDate
                     console.log(topicName)
                     console.log(topicDate)
-                    $("#topicsList").append('<li id='+topicName+' class="mdl-list__item mdl-list__item--two-line"><span class="mdl-list__item-primary-content">Name: '+topicName+'<span class="mdl-list__item-sub-title">'+topicDate+'</span></span></li>');
+                    $("#topicsList").append('<li id=' + topicName + ' class="mdl-list__item mdl-list__item--two-line"><span class="mdl-list__item-primary-content">Name: ' + topicName + '<span class="mdl-list__item-sub-title">' + topicDate + '</span></span></li>');
                 }
 
             }
 
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
             $("#spinner").hide();
             $("#response").text(err.error);
@@ -90,13 +97,13 @@ function updateTopics(topics) {
         method: "POST",
         url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/android",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function (request) {
+        beforeSend: function(request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function (data) {
+        success: function(data) {
             getInstanceIdInfo(window.token, window.key)
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
             $("#spinner").hide();
             $("#response").text(err.error);
