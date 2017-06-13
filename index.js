@@ -2,8 +2,10 @@ var key;
 var token;
 var topics;
 var platform;
+var currentId;
 
 $(document).ready(function() {
+    window.currentId = 1;
     $("#spinner").hide();
     $("#response").hide();
     $("#sendNotification").hide();
@@ -34,9 +36,33 @@ $(document).ready(function() {
         updateTopics(topics);
     })
     $("#manageTopics").click(function() {
+
         $("#topics").show()
     })
+
+    $("#addKeyValue").click(function() {
+        addKeyValue()
+    })
 })
+
+function addKeyValue() {
+    window.currentId += 1;
+    console.log(window.currentId)
+    $("#dataKeyVal").append(`<li class="mdl-list__item">
+                        <div class="mdl-list__item-primary-content">
+                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="key${window.currentId}" autocomplete="on">
+                                <label class="mdl-textfield__label" for="key${window.currentId}">Key</label>
+                            </div>
+                            <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0px 10px;">
+                                <input class="mdl-textfield__input" type="text" id="val${window.currentId}" autocomplete="on">
+                                <label class="mdl-textfield__label" for="val${window.currentId}">Value</label>
+                            </div>
+                        </div>
+                    </li>`);
+
+    componentHandler.upgradeDom();
+}
 
 function getInstanceIdInfo(instanceId, key) {
     window.key = key;
