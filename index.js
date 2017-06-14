@@ -2,6 +2,7 @@ var key;
 var token;
 var topics;
 var platform;
+var packageName;
 var currentId;
 
 $(document).ready(function() {
@@ -28,22 +29,110 @@ $(document).ready(function() {
     });
 
     $("#sendNotification").click(function() {
+        $("#txtTo").val(window.token)
+
         $("#notificationDiv").show();
-    })
+    });
 
     $("#updateTopics").click(function() {
         var topics = $("#txtTopics").val()
+        componentHandler.upgradeDom();
         updateTopics(topics);
-    })
+    });
     $("#manageTopics").click(function() {
 
         $("#topics").show()
-    })
+    });
 
     $("#addKeyValue").click(function() {
         addKeyValue()
-    })
+    });
+
+
+    $("#send").click(function() {
+        sendNotification();
+    });
 })
+
+function sendNotification() {
+    var to = $("#txtTo").val()
+    var registrationIds = $("#txtRegistrationIds").val()
+    var timeToLive = parseInt($("#txtTimeToLive").val())
+    var priority = parseInt($("#txtPriority").val())
+    var collapseKey = $("#txtCollapseKey").val()
+    var contentAvailable = $("#contentAvailable").prop('checked');
+    var dryRun = $("#dryRun").prop('checked');
+
+    var title = $("#txtTitle").val()
+    var body = $("#txtBody").val()
+    var sound = $("#txtSound").val()
+    var badge = $("#txtBadge").val()
+    var tag = $("#txtTag").val()
+    var channel = $("#txtChannel").val()
+    var color = $("#txtColor").val()
+    var clickAction = $("#txtClickAction").val()
+    var icon = $("#txtIcon").val()
+
+    var notificationPayload = {
+        'title': title,
+        'body': body,
+        'sound': sound,
+        'badge': badge,
+        'android_channel_id': channel,
+        'icon': icon,
+        'color': color,
+        'tag': tag,
+        'click_action': clickAction
+    }
+
+
+    var dataPayload = {};
+    for (i = 0; i < currentId; i++) {
+        var key = $("[id^=key" + i + "]").val()
+        var value = $("[id^=val" + i + "]").val()
+        dataPayload[key] = value;
+    }
+
+    var notificationData = {
+        'to': to,
+        'registration_ids': registrationIds,
+        'collapse_key': collapseKey,
+        'priority': priority,
+        'content_available': contentAvailable,
+        'time_to_live': timeToLive,
+        'dry_run': dryRun,
+        'notification': notificationPayload,
+        'data': dataPayload,
+        'restricted_package_name': window.packageName
+    }
+    console.log(notificationData)
+
+    var settings = {
+        method: "POST",
+        url: "https://fcm.googleapis.com/fcm/send",
+        contentType: "application/json; charset=utf-8",
+        body: notificationData,
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", "key=" + key);
+        },
+        success: function(data) {
+            $("#snackbarMessage").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
+        },
+        error: function(xhr, status, error) {
+            var err = xhr.responseText;
+
+            console.log(err)
+            $("#snackbarMessage").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
+
+        }
+    }
+
+
+
+
+
+
+}
 
 function addKeyValue() {
     window.currentId += 1;
@@ -86,6 +175,7 @@ function getInstanceIdInfo(instanceId, key) {
             } else if (data.platform == "CHROME") {
                 $("#platformIcon").text("laptop_chromebook")
             }
+            window.packageName = data.application
             $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
             $("#response").show();
             $("#sendNotification").show();

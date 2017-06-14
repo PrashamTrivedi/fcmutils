@@ -153,7 +153,7 @@
             </div>
             <div class="sides">
                 <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtTimeToLive" autocomplete="on">
+                    <input class="mdl-textfield__input" type="number" id="txtTimeToLive" autocomplete="on">
                     <label class="mdl-textfield__label" for="txtTimeToLive">Time To Live</label>
                 </div>
 
@@ -161,7 +161,7 @@
             <div class="sides">
                 <div class="leftInverse" style="margin:0px 10px 0px 0px;">
                     <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtPriority" autocomplete="on">
+                        <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtPriority">Priority</label>
                     </div>
                     <div class="rightInverse topMargin50">
@@ -249,23 +249,21 @@
                             Identifier used to replace existing notifications in the notification drawe
                         </div>
                     </div>
-                    <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0px 10px 0px 5px;">
-                            <input class="mdl-textfield__input" type="text" id="txtColor" autocomplete="on">
-                            <label class="mdl-textfield__label" for="txtColor">Icon Color(Android)</label>
 
-                        </div>
-                        <div class="rightInverse" style="margin:20px 0px 0px 0px;">
-                            <i id="color" class="material-icons">help_outline</i>
-                        </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="color">
-                            The notification's icon color, expressed in #rrggbb format.
-                        </div>
+                </div>
+
+                <div>
+                    <div>
+                        <label for="txtColor">Icon Color(Android)</label>
+                        <input type="color" id="txtColor" autocomplete="on">
+
                     </div>
+
+
                 </div>
                 <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtTitle" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtTitle">Title</label>
+                    <input class="mdl-textfield__input" type="text" id="txtIcon" autocomplete="on">
+                    <label class="mdl-textfield__label" for="txtIcon">Icon For Android</label>
                 </div>
                 <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" id="txtClickAction" autocomplete="on">
