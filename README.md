@@ -20,7 +20,7 @@ Reference : [InstanceId Server reference-Device Info](https://developers.google.
 
 ## Managing topics
 
-Using above apis soon, it will know topics subscribed to given device and will let you manage topics subscription and removal.
+Using above apis it will know topics subscribed to given device and will let you manage topics subscription.
 
 
 
@@ -29,7 +29,7 @@ Reference : [InstanceId Server reference-Managing Topics](https://developers.goo
 
 ## Construct and send notification
 
-Soon, you can construct notifications using `notification` and `data` payloads and will send it to devices or topic. 
+Construct notifications using `notification` and `data` payloads and will send it to devices or topic. 
 
 
 More documentations coming soon
