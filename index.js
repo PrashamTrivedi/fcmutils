@@ -5,7 +5,7 @@ var platform;
 var packageName;
 var currentId;
 
-$(document).ready(function() {
+$(document).ready(function () {
     window.currentId = 1;
     $("#spinner").hide();
     $("#response").hide();
@@ -15,7 +15,7 @@ $(document).ready(function() {
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
-    $('#verifyTokens').click(function() {
+    $('#verifyTokens').click(function () {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
@@ -28,37 +28,42 @@ $(document).ready(function() {
         getInstanceIdInfo(token, key);
     });
 
-    $("#sendNotification").click(function() {
+    $("#sendNotification").click(function () {
         $("#txtTo").val(window.token)
 
         $("#notificationDiv").show();
     });
 
-    $("#updateTopics").click(function() {
+    $("#updateTopics").click(function () {
         var topics = $("#txtTopics").val()
         componentHandler.upgradeDom();
         updateTopics(topics);
     });
-    $("#manageTopics").click(function() {
+    $("#manageTopics").click(function () {
 
         $("#topics").show()
     });
 
-    $("#addKeyValue").click(function() {
+    $("#addKeyValue").click(function () {
         addKeyValue()
     });
 
 
-    $("#send").click(function() {
+    $("#send").click(function () {
         sendNotification();
     });
 })
 
 function sendNotification() {
     var to = $("#txtTo").val()
-    var registrationIds = $("#txtRegistrationIds").val()
     var timeToLive = parseInt($("#txtTimeToLive").val())
+    if(timeToLive==""||isNaN(timeToLive)){
+        timeToLive=2419200
+    }
     var priority = parseInt($("#txtPriority").val())
+    if(priority==""||isNaN(priority)){
+        priority=5
+    }
     var collapseKey = $("#txtCollapseKey").val()
     var contentAvailable = $("#contentAvailable").prop('checked');
     var dryRun = $("#dryRun").prop('checked');
@@ -88,50 +93,61 @@ function sendNotification() {
 
     var dataPayload = {};
     for (i = 0; i < currentId; i++) {
-        var key = $("[id^=key" + i + "]").val()
-        var value = $("[id^=val" + i + "]").val()
-        dataPayload[key] = value;
+        var dataKey = $("[id^=key" + i + "]").val()
+        var dataValue = $("[id^=val" + i + "]").val()
+        dataPayload[dataKey] = dataValue;
     }
 
     var notificationData = {
         'to': to,
-        'registration_ids': registrationIds,
         'collapse_key': collapseKey,
         'priority': priority,
         'content_available': contentAvailable,
         'time_to_live': timeToLive,
         'dry_run': dryRun,
-        'notification': notificationPayload,
+        'notification': clean(notificationPayload),
         'data': dataPayload,
         'restricted_package_name': window.packageName
     }
-    console.log(notificationData)
-
+    var cleanedData = clean(notificationData)
+    console.log(cleanedData)
+    console.log(JSON.stringify(cleanedData))
     var settings = {
         method: "POST",
         url: "https://fcm.googleapis.com/fcm/send",
-        contentType: "application/json; charset=utf-8",
-        body: notificationData,
-        beforeSend: function(request) {
+        data: JSON.stringify(cleanedData),
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
-            $("#snackbarMessage").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
+        success: function (data) {
+            console.log("Sent")
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             var err = xhr.responseText;
 
             console.log(err)
-            $("#snackbarMessage").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
 
         }
     }
+    $.ajax(settings)
 
 
 
 
 
 
+}
+function clean(obj) {
+    var propNames = Object.getOwnPropertyNames(obj);
+    for (var i = 0; i < propNames.length; i++) {
+        var propName = propNames[i];
+        if (obj[propName] === null || obj[propName] === undefined||obj[propName]=="") {
+            delete obj[propName];
+        }
+    }
+    return obj;
 }
 
 function addKeyValue() {
@@ -161,10 +177,10 @@ function getInstanceIdInfo(instanceId, key) {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
+        success: function (data) {
             console.log(data)
             $("#spinner").hide();
 
@@ -182,18 +198,21 @@ function getInstanceIdInfo(instanceId, key) {
             $("#manageTopics").show();
             if (data.rel != undefined && data.rel.topics != undefined) {
                 $("#topicDiv").show();
+                $("#topicsList").empty();
                 for (var topic in data.rel.topics) {
                     var topicName = topic;
                     var topicDate = data.rel.topics[topic].addDate
                     console.log(topicName)
                     console.log(topicDate)
-                    $("#topicsList").append('<li id=' + topicName + ' class="mdl-list__item mdl-list__item--two-line"><span class="mdl-list__item-primary-content">Name: ' + topicName + '<span class="mdl-list__item-sub-title">' + topicDate + '</span></span></li>');
+                    $("#topicsList").append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
+                    <span class="mdl-list__item-primary-content">Name: ${topicName}
+                    <span class="mdl-list__item-sub-title">Subscribed On: ${topicDate}</span></span></li>`);
                 }
 
             }
 
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             var err = xhr.responseText;
             $("#spinner").hide();
             console.log(err)
@@ -209,17 +228,22 @@ function updateTopics(topics) {
     console.log(window.key)
     console.log(window.token)
     console.log(topics)
+
+    var topicArray = topics.split(",")
+    
+    topicArray.forEach(function(topic) {
     var settings = {
         method: "POST",
-        url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/android",
+        url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/"+topic,
         contentType: "application/json; charset=utf-8",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
-            getInstanceIdInfo(window.token, window.key)
+        success: function (data) {
+            console.log(subscribed)
+
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
             $("#spinner").hide();
             $("#response").text(err.error);
@@ -228,5 +252,9 @@ function updateTopics(topics) {
 
         }
     }
-    $.ajax(settings)
+    $.ajax(settings)        
+    });
+
+    
+
 }

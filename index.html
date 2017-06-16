@@ -44,6 +44,10 @@
                 <div>
                     <h2 class="mdl-typography--display-3">
                         Welcome to FCM Utils
+                    <span class="mdl-typography--body-1">
+                        v1.0
+                    </span>
+
                     </h2>
                 </div>
 
@@ -114,7 +118,7 @@
             <h3>Manage your topics here</h3>
             <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
-                <label class="mdl-textfield__label" for="txtTopics">Enter Topics to manage</label>
+                <label class="mdl-textfield__label" for="txtTopics">Enter Topics to manage(Separated by comma)</label>
             </div>
             <div class="mdl-card__actions mdl-card--border">
 
@@ -137,18 +141,6 @@
                 </div>
                 <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="to">
                     Device Token, Group Or Topic: Where you want to send your notification
-                </div>
-            </div>
-            <div class="sides">
-                <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtRegistrationIds" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtRegistrationIds">Registration Ids</label>
-                </div>
-                <div class="right topMargin50">
-                    <i id="registrationIds" class="material-icons">help_outline</i>
-                </div>
-                <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="registrationIds">
-                    Registration Ids.
                 </div>
             </div>
             <div class="sides">
@@ -302,10 +294,13 @@
                 </button>
             </div>
         </div>
+        <div id="snackBar" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
     </div>
 
-    <div id="snackbarMessage" class="mdl-js-snackbar mdl-snackbar">
-        <div class="mdl-snackbar__text"></div>
-        <button class="mdl-snackbar__action" type="button"></button>
-    </div>
+
+
+
 </body>
