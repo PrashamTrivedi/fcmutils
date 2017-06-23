@@ -5,7 +5,7 @@ var platform;
 var packageName;
 var currentId;
 
-$(document).ready(function () {
+$(document).ready(function() {
     window.currentId = 1;
     $("#spinner").hide();
     $("#response").hide();
@@ -15,41 +15,61 @@ $(document).ready(function () {
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
-    $('#verifyTokens').click(function () {
+    $('#verifyTokens').click(function() {
         // Refresh all of the forecasts
         var key = $("#txtApplicationKey").val()
         var token = $("#txtToken").val()
         if (key == "") {
-            key = testingApiKey
+            $("#txtApplicationKey").prop('required', true);
+            $("#txtApplicationKey").parent().addClass('is-invalid');
+        } else {
+            $("#txtApplicationKey").prop('required', false);
+            $("#txtApplicationKey").parent().removeClass('is-invalid');
         }
         if (token == "") {
-            token = testingToken
+            $("#txtToken").prop('required', true);
+            $("#txtToken").parent().addClass('is-invalid');
+        } else {
+            $("#txtToken").prop('required', false);
+            $("#txtToken").parent().removeClass('is-invalid');
         }
-        getInstanceIdInfo(token, key);
+
+        if (token != "" && key != "") {
+            getInstanceIdInfo(token, key);
+        }
     });
 
-    $("#sendNotification").click(function () {
+    $("#sendNotification").click(function() {
         $("#txtTo").val(window.token)
 
         $("#notificationDiv").show();
     });
 
-    $("#updateTopics").click(function () {
+    $("#updateTopics").click(function() {
         var topics = $("#txtTopics").val()
+        if (topics == "") {
+            $("#txtTopics").prop('required', true);
+            $("#txtTopics").parent().addClass('is-invalid');
+        } else {
+            $("#txtTopics").prop('required', false);
+            $("#txtTopics").parent().removeClass('is-invalid');
+        }
         componentHandler.upgradeDom();
-        updateTopics(topics);
+        if (topics != "") {
+            updateTopics(topics);
+        }
     });
-    $("#manageTopics").click(function () {
+    $("#manageTopics").click(function() {
 
         $("#topics").show()
     });
 
-    $("#addKeyValue").click(function () {
+    $("#addKeyValue").click(function() {
         addKeyValue()
     });
 
 
-    $("#send").click(function () {
+    $("#send").click(function() {
         sendNotification();
     });
 })
@@ -57,93 +77,102 @@ $(document).ready(function () {
 function sendNotification() {
     var to = $("#txtTo").val()
     var timeToLive = parseInt($("#txtTimeToLive").val())
-    if(timeToLive==""||isNaN(timeToLive)){
-        timeToLive=2419200
+    if (timeToLive == "" || isNaN(timeToLive)) {
+        timeToLive = 2419200
     }
     var priority = parseInt($("#txtPriority").val())
-    if(priority==""||isNaN(priority)){
-        priority=5
+    if (priority == "" || isNaN(priority)) {
+        priority = 5
     }
     var collapseKey = $("#txtCollapseKey").val()
     var contentAvailable = $("#contentAvailable").prop('checked');
     var dryRun = $("#dryRun").prop('checked');
 
     var title = $("#txtTitle").val()
-    var body = $("#txtBody").val()
-    var sound = $("#txtSound").val()
-    var badge = $("#txtBadge").val()
-    var tag = $("#txtTag").val()
-    var channel = $("#txtChannel").val()
-    var color = $("#txtColor").val()
-    var clickAction = $("#txtClickAction").val()
-    var icon = $("#txtIcon").val()
-
-    var notificationPayload = {
-        'title': title,
-        'body': body,
-        'sound': sound,
-        'badge': badge,
-        'android_channel_id': channel,
-        'icon': icon,
-        'color': color,
-        'tag': tag,
-        'click_action': clickAction
+    if (title == "") {
+        $("#txtTitle").prop('required', true);
+        $("#txtTitle").parent().addClass('is-invalid');
+    } else {
+        $("#txtTitle").prop('required', false);
+        $("#txtTitle").parent().removeClass('is-invalid');
     }
+    if (title != "") {
+        var body = $("#txtBody").val()
+        var sound = $("#txtSound").val()
+        var badge = $("#txtBadge").val()
+        var tag = $("#txtTag").val()
+        var channel = $("#txtChannel").val()
+        var color = $("#txtColor").val()
+        var clickAction = $("#txtClickAction").val()
+        var icon = $("#txtIcon").val()
 
-
-    var dataPayload = {};
-    for (i = 0; i < currentId; i++) {
-        var dataKey = $("[id^=key" + i + "]").val()
-        var dataValue = $("[id^=val" + i + "]").val()
-        dataPayload[dataKey] = dataValue;
-    }
-
-    var notificationData = {
-        'to': to,
-        'collapse_key': collapseKey,
-        'priority': priority,
-        'content_available': contentAvailable,
-        'time_to_live': timeToLive,
-        'dry_run': dryRun,
-        'notification': clean(notificationPayload),
-        'data': dataPayload,
-        'restricted_package_name': window.packageName
-    }
-    var cleanedData = clean(notificationData)
-    console.log(cleanedData)
-    console.log(JSON.stringify(cleanedData))
-    var settings = {
-        method: "POST",
-        url: "https://fcm.googleapis.com/fcm/send",
-        data: JSON.stringify(cleanedData),
-        beforeSend: function (request) {
-            request.setRequestHeader("Authorization", "key=" + key);
-        },
-        success: function (data) {
-            console.log("Sent")
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
-        },
-        error: function (xhr, status, error) {
-            var err = xhr.responseText;
-
-            console.log(err)
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
-
+        var notificationPayload = {
+            'title': title,
+            'body': body,
+            'sound': sound,
+            'badge': badge,
+            'android_channel_id': channel,
+            'icon': icon,
+            'color': color,
+            'tag': tag,
+            'click_action': clickAction
         }
-    }
-    $.ajax(settings)
 
+
+        var dataPayload = {};
+        for (i = 0; i < currentId; i++) {
+            var dataKey = $("[id^=key" + i + "]").val()
+            var dataValue = $("[id^=val" + i + "]").val()
+            dataPayload[dataKey] = dataValue;
+        }
+
+        var notificationData = {
+            'to': to,
+            'collapse_key': collapseKey,
+            'priority': priority,
+            'content_available': contentAvailable,
+            'time_to_live': timeToLive,
+            'dry_run': dryRun,
+            'notification': clean(notificationPayload),
+            'data': dataPayload,
+            'restricted_package_name': window.packageName
+        }
+        var cleanedData = clean(notificationData)
+        console.log(cleanedData)
+        console.log(JSON.stringify(cleanedData))
+        var settings = {
+            method: "POST",
+            url: "https://fcm.googleapis.com/fcm/send",
+            data: JSON.stringify(cleanedData),
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "key=" + key);
+            },
+            success: function(data) {
+                console.log("Sent")
+                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
+            },
+            error: function(xhr, status, error) {
+                var err = xhr.responseText;
+
+                console.log(err)
+                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
+
+            }
+        }
+        $.ajax(settings)
+    }
 
 
 
 
 
 }
+
 function clean(obj) {
     var propNames = Object.getOwnPropertyNames(obj);
     for (var i = 0; i < propNames.length; i++) {
         var propName = propNames[i];
-        if (obj[propName] === null || obj[propName] === undefined||obj[propName]=="") {
+        if (obj[propName] === null || obj[propName] === undefined || obj[propName] == "") {
             delete obj[propName];
         }
     }
@@ -177,10 +206,10 @@ function getInstanceIdInfo(instanceId, key) {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function (request) {
+        beforeSend: function(request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function (data) {
+        success: function(data) {
             console.log(data)
             $("#spinner").hide();
 
@@ -212,7 +241,7 @@ function getInstanceIdInfo(instanceId, key) {
             }
 
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             var err = xhr.responseText;
             $("#spinner").hide();
             console.log(err)
@@ -230,31 +259,31 @@ function updateTopics(topics) {
     console.log(topics)
 
     var topicArray = topics.split(",")
-    
+
     topicArray.forEach(function(topic) {
-    var settings = {
-        method: "POST",
-        url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/"+topic,
-        contentType: "application/json; charset=utf-8",
-        beforeSend: function (request) {
-            request.setRequestHeader("Authorization", "key=" + key);
-        },
-        success: function (data) {
-            console.log(subscribed)
+        var settings = {
+            method: "POST",
+            url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/" + topic,
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "key=" + key);
+            },
+            success: function(data) {
+                console.log(subscribed)
 
-        },
-        error: function (xhr, status, error) {
-            var err = JSON.parse(xhr.responseText);
-            $("#spinner").hide();
-            $("#response").text(err.error);
-            console.log(err)
-            $("#response").show();
+            },
+            error: function(xhr, status, error) {
+                var err = JSON.parse(xhr.responseText);
+                $("#spinner").hide();
+                $("#response").text(err.error);
+                console.log(err)
+                $("#response").show();
 
+            }
         }
-    }
-    $.ajax(settings)        
+        $.ajax(settings)
     });
 
-    
+
 
 }
