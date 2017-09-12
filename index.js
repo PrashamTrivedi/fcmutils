@@ -7,31 +7,38 @@ var currentId;
 
 $(document).ready(function() {
     window.currentId = 1;
-    $("#spinner").hide();
+    var $spinner = $("#spinner");
+    var $sendNotification = $("#sendNotification");
+    var $manageTopics = $("#manageTopics");
+
+    $spinner.hide();
     $("#response").hide();
-    $("#sendNotification").hide();
-    $("#manageTopics").hide();
+    $sendNotification.hide();
+    $manageTopics.hide();
     $("#topics").hide();
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
     $('#verifyTokens').click(function() {
         // Refresh all of the forecasts
-        var key = $("#txtApplicationKey").val()
-        var token = $("#txtToken").val()
+        const $txtApplicationKey = $("#txtApplicationKey");
+        const $txtToken = $("#txtToken");
+
+        const key = $txtApplicationKey.val();
+        const token = $txtToken.val();
         if (key == "") {
-            $("#txtApplicationKey").prop('required', true);
-            $("#txtApplicationKey").parent().addClass('is-invalid');
+            $txtApplicationKey.prop('required', true);
+            $txtApplicationKey.parent().addClass('is-invalid');
         } else {
-            $("#txtApplicationKey").prop('required', false);
-            $("#txtApplicationKey").parent().removeClass('is-invalid');
+            $txtApplicationKey.prop('required', false);
+            $txtApplicationKey.parent().removeClass('is-invalid');
         }
         if (token == "") {
-            $("#txtToken").prop('required', true);
-            $("#txtToken").parent().addClass('is-invalid');
+            $txtToken.prop('required', true);
+            $txtToken.parent().addClass('is-invalid');
         } else {
-            $("#txtToken").prop('required', false);
-            $("#txtToken").parent().removeClass('is-invalid');
+            $txtToken.prop('required', false);
+            $txtToken.parent().removeClass('is-invalid');
         }
 
         if (token != "" && key != "") {
@@ -39,27 +46,28 @@ $(document).ready(function() {
         }
     });
 
-    $("#sendNotification").click(function() {
+    $sendNotification.click(function () {
         $("#txtTo").val(window.token)
 
         $("#notificationDiv").show();
     });
 
     $("#updateTopics").click(function() {
-        var topics = $("#txtTopics").val()
+        const $txtTopics = $("#txtTopics");
+        const topics = $txtTopics.val();
         if (topics == "") {
-            $("#txtTopics").prop('required', true);
-            $("#txtTopics").parent().addClass('is-invalid');
+            $txtTopics.prop('required', true);
+            $txtTopics.parent().addClass('is-invalid');
         } else {
-            $("#txtTopics").prop('required', false);
-            $("#txtTopics").parent().removeClass('is-invalid');
+            $txtTopics.prop('required', false);
+            $txtTopics.parent().removeClass('is-invalid');
         }
         componentHandler.upgradeDom();
         if (topics != "") {
             updateTopics(topics);
         }
     });
-    $("#manageTopics").click(function() {
+    $manageTopics.click(function () {
 
         $("#topics").show()
     });
@@ -72,29 +80,30 @@ $(document).ready(function() {
     $("#send").click(function() {
         sendNotification();
     });
-})
+});
 
 function sendNotification() {
-    var to = $("#txtTo").val()
-    var timeToLive = parseInt($("#txtTimeToLive").val())
+    const to = $("#txtTo").val();
+    let timeToLive = parseInt($("#txtTimeToLive").val());
     if (timeToLive == "" || isNaN(timeToLive)) {
         timeToLive = 2419200
     }
-    var priority = parseInt($("#txtPriority").val())
+    let priority = parseInt($("#txtPriority").val());
     if (priority == "" || isNaN(priority)) {
         priority = 5
     }
-    var collapseKey = $("#txtCollapseKey").val()
-    var contentAvailable = $("#contentAvailable").prop('checked');
-    var dryRun = $("#dryRun").prop('checked');
+    const collapseKey = $("#txtCollapseKey").val();
+    const contentAvailable = $("#contentAvailable").prop('checked');
+    const dryRun = $("#dryRun").prop('checked');
 
-    var title = $("#txtTitle").val()
+    const $txtTitle = $("#txtTitle");
+    const title = $txtTitle.val();
     if (title == "") {
-        $("#txtTitle").prop('required', true);
-        $("#txtTitle").parent().addClass('is-invalid');
+        $txtTitle.prop('required', true);
+        $txtTitle.parent().addClass('is-invalid');
     } else {
-        $("#txtTitle").prop('required', false);
-        $("#txtTitle").parent().removeClass('is-invalid');
+        $txtTitle.prop('required', false);
+        $txtTitle.parent().removeClass('is-invalid');
     }
     if (title != "") {
         var body = $("#txtBody").val()
@@ -148,7 +157,9 @@ function sendNotification() {
                 request.setRequestHeader("Authorization", "key=" + key);
             },
             success: function(data) {
-                console.log("Sent")
+                console.log(this.url);
+                console.log(this.data);
+                console.log("Sent");
                 document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
             },
             error: function(xhr, status, error) {
@@ -202,15 +213,17 @@ function getInstanceIdInfo(instanceId, key) {
     window.key = key;
     window.token = instanceId;
     $("#spinner").show();
-    var settings = {
+    const settings = {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
-            console.log(data)
+        success: function (data) {
+            console.log(data);
+            console.log(this.url);
+            console.log(this.data);
             $("#spinner").hide();
 
             if (data.platform == "ANDROID") {
@@ -221,19 +234,22 @@ function getInstanceIdInfo(instanceId, key) {
                 $("#platformIcon").text("laptop_chromebook")
             }
             window.packageName = data.application
+            var $response = $("#response");
+            $response.show();
+
             $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
-            $("#response").show();
             $("#sendNotification").show();
             $("#manageTopics").show();
             if (data.rel != undefined && data.rel.topics != undefined) {
                 $("#topicDiv").show();
-                $("#topicsList").empty();
-                for (var topic in data.rel.topics) {
-                    var topicName = topic;
+                const $topicsList = $("#topicsList");
+                $topicsList.empty();
+                for (const topic in data.rel.topics) {
+                    const topicName = topic;
                     var topicDate = data.rel.topics[topic].addDate
-                    console.log(topicName)
-                    console.log(topicDate)
-                    $("#topicsList").append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
+                    console.log(topicName);
+                    console.log(topicDate);
+                    $topicsList.append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
                     <span class="mdl-list__item-primary-content">Name: ${topicName}
                     <span class="mdl-list__item-sub-title">Subscribed On: ${topicDate}</span></span></li>`);
                 }
@@ -241,38 +257,41 @@ function getInstanceIdInfo(instanceId, key) {
             }
 
         },
-        error: function(xhr, status, error) {
-            var err = xhr.responseText;
+        error: (xhr, status, error) => {
+            const err = xhr.responseText;
             $("#spinner").hide();
-            console.log(err)
-            $("#response").text("Error in checking data, Please check console for details");
-            $("#response").show();
+            console.log(err);
+            const $response = $("#response");
+            $('#appName').text("Error in checking data, Please check console for details");
+            $response.show();
 
         }
-    }
+    };
     $.ajax(settings)
+
 }
 
 function updateTopics(topics) {
-    console.log(window.key)
-    console.log(window.token)
-    console.log(topics)
+    console.log(window.key);
+    console.log(window.token);
+    console.log(topics);
 
-    var topicArray = topics.split(",")
+    const topicArray = topics.split(",");
 
     topicArray.forEach(function(topic) {
-        var settings = {
+        const settings = {
             method: "POST",
             url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/" + topic,
             contentType: "application/json; charset=utf-8",
-            beforeSend: function(request) {
+            beforeSend: function (request) {
                 request.setRequestHeader("Authorization", "key=" + key);
             },
-            success: function(data) {
-                console.log(subscribed)
-
+            success: function (data) {
+                console.log('subscribed');
+                console.log(this.url);
+                console.log(this.data);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
                 $("#spinner").hide();
                 $("#response").text(err.error);
@@ -280,7 +299,7 @@ function updateTopics(topics) {
                 $("#response").show();
 
             }
-        }
+        };
         $.ajax(settings)
     });
 

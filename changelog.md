@@ -1,3 +1,8 @@
+## (1.1)12-09
+- Some bugfixing.
+- (Beta) Api Call logs, currently log for all API calls are being printed in Console. In future you can see & possibly copy calls.
+ 
+
 ## (1.0)16-06
 - Ability to send notifications,
 - Ability to subscribe multiple topics

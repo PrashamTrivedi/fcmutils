@@ -42,7 +42,7 @@
                     <h2 class="mdl-typography--display-3">
                         Welcome to FCM Utils
                         <span class="mdl-typography--body-1">
-                        v1.0
+                            <a href="https://github.com/PrashamTrivedi/fcmutils/blob/master/changelog.md">v1.1</a>
                     </span>
 
                     </h2>
@@ -151,7 +151,7 @@
 
             </div>
             <div class="sides">
-                <div class="leftInverse" style="margin:0px 10px 0px 0px;">
+                <div class="leftInverse" style="margin:0 10px 0 0;">
                     <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding: 30px;">
                         <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtPriority">Priority</label>
@@ -164,7 +164,7 @@
                     </div>
                 </div>
 
-                <div class="sides rightInverse" style="margin:0px 10px;">
+                <div class="sides rightInverse" style="margin:0 10px;">
                     <div class="leftInverse">
                         <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="txtCollapseKey" autocomplete="on">
@@ -177,11 +177,13 @@
                             Collapse Key
                         </div>
                     </div>
-                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable" style="margin:50px 10px 0px;">
+                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable"
+                           style="margin:50px 10px 0;">
                         <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
                         <span class="mdl-checkbox__label">Content Available</span>
                     </label>
-                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun" style="margin:50px 10px 0px;">
+                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun"
+                           style="margin:50px 10px 0;">
                         <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
                         <span class="mdl-checkbox__label">Dry Run</span>
                     </label>
@@ -199,17 +201,19 @@
                     <input class="mdl-textfield__input" type="text" id="txtBody" autocomplete="on">
                     <label class="mdl-textfield__label" for="txtBody">Body</label>
                 </div>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0px 10px 0px 0px; ">
+                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                     style="margin:0 10px 0 0; ">
                     <input class="mdl-textfield__input" type="text" id="txtSound" autocomplete="on">
                     <label class="mdl-textfield__label" for="txtSound">Sound</label>
                 </div>
                 <div class="sides">
                     <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0px 10px 0px 0px;">
+                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             style="margin:0 10px 0 0;">
                             <input class="mdl-textfield__input" type="text" id="txtBadge" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtBadge">Badge(iOS)</label>
                         </div>
-                        <div class="rightInverse" style="margin:20px 0px 0px 0px;">
+                        <div class="rightInverse" style="margin:20px 0 0 0;">
                             <i id="badge" class="material-icons">help_outline</i>
                         </div>
                         <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="badge">
@@ -218,11 +222,12 @@
 
                     </div>
                     <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0px 10px 0px 5px;">
+                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             style="margin:0 10px 0 5px;">
                             <input class="mdl-textfield__input" type="text" id="txtChannel" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtChannel">Channel Id(Android)</label>
                         </div>
-                        <div class="rightInverse" style="margin:20px 0px 0px 0px;">
+                        <div class="rightInverse" style="margin:20px 0 0 0;">
                             <i id="channelId" class="material-icons">help_outline</i>
                         </div>
                         <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="channelId">
@@ -230,15 +235,16 @@
                         </div>
                     </div>
                     <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0px 10px 0px 5px;">
+                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             style="margin:0 10px 0 5px;">
                             <input class="mdl-textfield__input" type="text" id="txtTag" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtTag">Tag(Android)</label>
 
                         </div>
-                        <div class="rightInverse" style="margin:20px 0px 0px 0px;">
-                            <i id="txtTag" class="material-icons">help_outline</i>
+                        <div class="rightInverse" style="margin:20px 0 0 0;">
+                            <i id="txtTagHelp" class="material-icons">help_outline</i>
                         </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="txtTag">
+                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="txtTagHelp">
                             Identifier used to replace existing notifications in the notification drawe
                         </div>
                     </div>
@@ -273,7 +279,8 @@
                                 <input class="mdl-textfield__input" type="text" id="key1" autocomplete="on">
                                 <label class="mdl-textfield__label" for="key1">Key</label>
                             </div>
-                            <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0px 10px;">
+                            <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                 style="margin: 0 10px;">
                                 <input class="mdl-textfield__input" type="text" id="val1" autocomplete="on">
                                 <label class="mdl-textfield__label" for="val1">Value</label>
                             </div>
@@ -308,9 +315,8 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-purple.min.css" />
     <style>
         .center {
-            margin: auto;
             width: 80%;
-            margin-top: 30px;
+            margin: 30px auto auto;
         }
         
         .centerAutoWidth {
@@ -367,11 +373,11 @@
             }
         };
         (function() {
-            var wf = document.createElement('script');
+            const wf = document.createElement('script');
             wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
             wf.type = 'text/javascript';
             wf.async = 'true';
-            var s = document.getElementsByTagName('script')[0];
+            const s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(wf, s);
         })();
     </script>
