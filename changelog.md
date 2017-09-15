@@ -1,3 +1,6 @@
+## (1.2)15-09
+- Solve one silly bug that prevents to send notification
+
 ## (1.1)12-09
 - Some bugfixing.
 - (Beta) Api Call logs, currently log for all API calls are being printed in Console. In future you can see & possibly copy calls.

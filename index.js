@@ -152,6 +152,7 @@ function sendNotification() {
         var settings = {
             method: "POST",
             url: "https://fcm.googleapis.com/fcm/send",
+            contentType: "application/json; charset=utf-8",
             data: JSON.stringify(cleanedData),
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization", "key=" + key);
