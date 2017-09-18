@@ -1,2 +1,2 @@
-var testingApiKey="{YourServersApiKey}"
-var testingToken ="${AnyTestingToken}"
+var testingApiKey=
+var testingToken =
