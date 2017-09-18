@@ -7,9 +7,9 @@ var currentId;
 
 $(document).ready(function() {
     window.currentId = 1;
-    var $spinner = $("#spinner");
-    var $sendNotification = $("#sendNotification");
-    var $manageTopics = $("#manageTopics");
+    const $spinner = $("#spinner");
+    const $sendNotification = $("#sendNotification");
+    const $manageTopics = $("#manageTopics");
 
     $spinner.hide();
     $("#response").hide();
@@ -19,6 +19,27 @@ $(document).ready(function() {
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
+    $('#sendNotificationObject').click(function () {
+        const $notificationPayload = $('#notificationPayload');
+        if ($(this).is(':checked')) {
+            $notificationPayload.show();
+        } else {
+            $notificationPayload.hide();
+
+        }
+    });
+
+    console.log(testingApiKey);
+    console.log(testingToken);
+    const $txtApplicationKey = $("#txtApplicationKey");
+    const $txtToken = $("#txtToken");
+    if (testingApiKey !== undefined) {
+        $txtApplicationKey.val(testingApiKey)
+    }
+    if (testingToken !== undefined) {
+        $txtToken.val(testingToken);
+    }
+
     $('#verifyTokens').click(function() {
         // Refresh all of the forecasts
         const $txtApplicationKey = $("#txtApplicationKey");
@@ -26,14 +47,14 @@ $(document).ready(function() {
 
         const key = $txtApplicationKey.val();
         const token = $txtToken.val();
-        if (key == "") {
+        if (key === "") {
             $txtApplicationKey.prop('required', true);
             $txtApplicationKey.parent().addClass('is-invalid');
         } else {
             $txtApplicationKey.prop('required', false);
             $txtApplicationKey.parent().removeClass('is-invalid');
         }
-        if (token == "") {
+        if (token === "") {
             $txtToken.prop('required', true);
             $txtToken.parent().addClass('is-invalid');
         } else {
@@ -41,13 +62,13 @@ $(document).ready(function() {
             $txtToken.parent().removeClass('is-invalid');
         }
 
-        if (token != "" && key != "") {
+        if (token !== "" && key !== "") {
             getInstanceIdInfo(token, key);
         }
     });
 
     $sendNotification.click(function () {
-        $("#txtTo").val(window.token)
+        $("#txtTo").val(window.token);
 
         $("#notificationDiv").show();
     });
@@ -55,7 +76,7 @@ $(document).ready(function() {
     $("#updateTopics").click(function() {
         const $txtTopics = $("#txtTopics");
         const topics = $txtTopics.val();
-        if (topics == "") {
+        if (topics === "") {
             $txtTopics.prop('required', true);
             $txtTopics.parent().addClass('is-invalid');
         } else {
@@ -63,7 +84,7 @@ $(document).ready(function() {
             $txtTopics.parent().removeClass('is-invalid');
         }
         componentHandler.upgradeDom();
-        if (topics != "") {
+        if (topics !== "") {
             updateTopics(topics);
         }
     });
@@ -82,14 +103,15 @@ $(document).ready(function() {
     });
 });
 
+
 function sendNotification() {
     const to = $("#txtTo").val();
     let timeToLive = parseInt($("#txtTimeToLive").val());
-    if (timeToLive == "" || isNaN(timeToLive)) {
+    if (timeToLive === "" || isNaN(timeToLive)) {
         timeToLive = 2419200
     }
     let priority = parseInt($("#txtPriority").val());
-    if (priority == "" || isNaN(priority)) {
+    if (priority === "" || isNaN(priority)) {
         priority = 5
     }
     const collapseKey = $("#txtCollapseKey").val();
@@ -98,24 +120,25 @@ function sendNotification() {
 
     const $txtTitle = $("#txtTitle");
     const title = $txtTitle.val();
-    if (title == "") {
+    let notification = null;
+    if (title === "") {
         $txtTitle.prop('required', true);
         $txtTitle.parent().addClass('is-invalid');
     } else {
         $txtTitle.prop('required', false);
         $txtTitle.parent().removeClass('is-invalid');
     }
-    if (title != "") {
-        var body = $("#txtBody").val()
-        var sound = $("#txtSound").val()
-        var badge = $("#txtBadge").val()
-        var tag = $("#txtTag").val()
-        var channel = $("#txtChannel").val()
-        var color = $("#txtColor").val()
-        var clickAction = $("#txtClickAction").val()
-        var icon = $("#txtIcon").val()
+    if (title !== "") {
+        const body = $("#txtBody").val();
+        const sound = $("#txtSound").val();
+        const badge = $("#txtBadge").val();
+        const tag = $("#txtTag").val();
+        const channel = $("#txtChannel").val();
+        const color = $("#txtColor").val();
+        const clickAction = $("#txtClickAction").val();
+        const icon = $("#txtIcon").val();
 
-        var notificationPayload = {
+        const notificationPayload = {
             'title': title,
             'body': body,
             'sound': sound,
@@ -125,54 +148,56 @@ function sendNotification() {
             'color': color,
             'tag': tag,
             'click_action': clickAction
-        }
+        };
 
 
-        var dataPayload = {};
-        for (i = 0; i < currentId; i++) {
-            var dataKey = $("[id^=key" + i + "]").val()
-            var dataValue = $("[id^=val" + i + "]").val()
-            dataPayload[dataKey] = dataValue;
-        }
+        notification = clean(notificationPayload);
 
-        var notificationData = {
-            'to': to,
-            'collapse_key': collapseKey,
-            'priority': priority,
-            'content_available': contentAvailable,
-            'time_to_live': timeToLive,
-            'dry_run': dryRun,
-            'notification': clean(notificationPayload),
-            'data': dataPayload,
-            'restricted_package_name': window.packageName
-        }
-        var cleanedData = clean(notificationData)
-        console.log(cleanedData)
-        console.log(JSON.stringify(cleanedData))
-        var settings = {
-            method: "POST",
-            url: "https://fcm.googleapis.com/fcm/send",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(cleanedData),
-            beforeSend: function(request) {
-                request.setRequestHeader("Authorization", "key=" + key);
-            },
-            success: function(data) {
-                console.log(this.url);
-                console.log(this.data);
-                console.log("Sent");
-                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
-            },
-            error: function(xhr, status, error) {
-                var err = xhr.responseText;
-
-                console.log(err)
-                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
-
-            }
-        }
-        $.ajax(settings)
     }
+    const dataPayload = {};
+    for (i = 0; i <= window.currentId; i++) {
+        const dataKey = $("[id^=key" + i + "]").val();
+        const dataValue = $("[id^=val" + i + "]").val();
+        dataPayload[dataKey] = dataValue;
+    }
+
+    const notificationData = {
+        'to': to,
+        'collapse_key': collapseKey,
+        'priority': priority,
+        'content_available': contentAvailable,
+        'time_to_live': timeToLive,
+        'dry_run': dryRun,
+        'notification': notification,
+        'data': dataPayload,
+        'restricted_package_name': window.packageName
+    };
+    const cleanedData = clean(notificationData);
+    console.log(cleanedData);
+    console.log(JSON.stringify(cleanedData));
+    const settings = {
+        method: "POST",
+        url: "https://fcm.googleapis.com/fcm/send",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(cleanedData),
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "key=" + key);
+        },
+        success: function (data) {
+            console.log(this.url);
+            console.log(this.data);
+            console.log("Sent");
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({'message': 'Notification Sent'});
+        },
+        error: function (xhr, status, error) {
+            const err = xhr.responseText;
+
+            console.log(err);
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({'message': 'Notification Not Sent'});
+
+        }
+    };
+    $.ajax(settings)
 
 
 
@@ -181,10 +206,10 @@ function sendNotification() {
 }
 
 function clean(obj) {
-    var propNames = Object.getOwnPropertyNames(obj);
-    for (var i = 0; i < propNames.length; i++) {
-        var propName = propNames[i];
-        if (obj[propName] === null || obj[propName] === undefined || obj[propName] == "") {
+    const propNames = Object.getOwnPropertyNames(obj);
+    for (let i = 0; i < propNames.length; i++) {
+        const propName = propNames[i];
+        if (obj[propName] === null || obj[propName] === undefined || obj[propName] === "") {
             delete obj[propName];
         }
     }
@@ -222,16 +247,16 @@ function getInstanceIdInfo(instanceId, key) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
         success: function (data) {
-            console.log(data);
+            // console.log(data);
             console.log(this.url);
             console.log(this.data);
             $("#spinner").hide();
 
-            if (data.platform == "ANDROID") {
+            if (data.platform === "ANDROID") {
                 $("#platformIcon").text("phone_android")
-            } else if (data.platform == "IOS") {
+            } else if (data.platform === "IOS") {
                 $("#platformIcon").text("phone_iphone")
-            } else if (data.platform == "CHROME") {
+            } else if (data.platform === "CHROME") {
                 $("#platformIcon").text("laptop_chromebook")
             }
             window.packageName = data.application
@@ -241,13 +266,13 @@ function getInstanceIdInfo(instanceId, key) {
             $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
             $("#sendNotification").show();
             $("#manageTopics").show();
-            if (data.rel != undefined && data.rel.topics != undefined) {
+            if (data.rel !== undefined && data.rel.topics !== undefined) {
                 $("#topicDiv").show();
                 const $topicsList = $("#topicsList");
                 $topicsList.empty();
                 for (const topic in data.rel.topics) {
                     const topicName = topic;
-                    var topicDate = data.rel.topics[topic].addDate
+                    var topicDate = data.rel.topics[topic].addDate;
                     console.log(topicName);
                     console.log(topicDate);
                     $topicsList.append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">

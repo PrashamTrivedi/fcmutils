@@ -1,5 +1,8 @@
+## (1.3)18-09
+- Sending notification object is optional, and user can change the flag
+
 ## (1.2)15-09
-- Solve one silly bug that prevents to send notification
+- Solve one bug that prevents to send notification
 
 ## (1.1)12-09
 - Some bugfixing.
