@@ -29,21 +29,12 @@ $(document).ready(function() {
         }
     });
 
-    console.log(testingApiKey);
-    console.log(testingToken);
-    const $txtApplicationKey = $("#txtApplicationKey");
-    const $txtToken = $("#txtToken");
-    if (testingApiKey !== undefined) {
-        $txtApplicationKey.val(testingApiKey)
-    }
-    if (testingToken !== undefined) {
-        $txtToken.val(testingToken);
-    }
 
     $('#verifyTokens').click(function() {
+
         // Refresh all of the forecasts
-        const $txtApplicationKey = $("#txtApplicationKey");
-        const $txtToken = $("#txtToken");
+        let $txtApplicationKey = $("#txtApplicationKey");
+        let $txtToken = $("#txtToken");
 
         const key = $txtApplicationKey.val();
         const token = $txtToken.val();

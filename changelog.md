@@ -1,5 +1,6 @@
 ## (1.3)18-09
 - Sending notification object is optional, and user can change the flag
+- 1.3.1 A small bugfix
 
 ## (1.2)15-09
 - Solve one bug that prevents to send notification
