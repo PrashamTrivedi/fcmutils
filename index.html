@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="FCM Utils">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="manifest" href="/manifest.json">
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="FCM Utils">
@@ -24,11 +24,13 @@
 
     <title>FCM Utils</title>
 
-    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="jquery.min.js"></script>
     <script async src="testing.js"></script>
     <script defer src="index.js"></script>
+    <script defer src="localforage.js"></script>
 
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script defer src="material.min.js"></script>
+
 </head>
 
 <body>
@@ -42,8 +44,7 @@
                 <h2 class="mdl-typography--display-3">
                     Welcome to FCM Utils
                     <span class="mdl-typography--body-1">
-                            <a href="https://github.com/PrashamTrivedi/fcmutils/blob/master/changelog.md"><v1
-                                    class="3"></v1></a>
+                            <a href="https://github.com/PrashamTrivedi/fcmutils/blob/master/changelog.md">v1.3.1</a>
                     </span>
 
                 </h2>
@@ -321,7 +322,8 @@
 
 
 <!-- Stylesheet -->
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-purple.min.css"/>
+<link rel="stylesheet" href="material.min.css"/>
+<!--<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-purple.min.css"/>-->
 <style>
     .center {
         width: 80%;

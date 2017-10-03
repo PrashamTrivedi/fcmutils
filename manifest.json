@@ -1,0 +1,15 @@
+{
+  "name": "FCM Utils",
+  "short_name": "FCM Utils",
+  "start_url": "/index.html",
+  "theme_color": "#ffa000",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "fcm_logo.png",
+      "sizes": "300x300",
+      "type": "image/png"
+    }
+  ]
+}

@@ -4,7 +4,9 @@ var topics;
 var platform;
 var packageName;
 var currentId;
-
+navigator.serviceWorker && navigator.serviceWorker.register('./service_worker.js').then(function (registration) {
+    console.log('Excellent, registered with scope: ', registration.scope);
+});
 $(document).ready(function() {
     window.currentId = 1;
     const $spinner = $("#spinner");
