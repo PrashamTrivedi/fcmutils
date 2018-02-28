@@ -5,6 +5,22 @@ var platform;
 var packageName;
 var currentId;
 
+var instanceIdObject = { appKey: '', deviceToken: '' }
+var app = new Vue({
+    el: '#version',
+
+    data: {
+        version: '3'
+    },
+
+
+});
+
+var instanceIdThing = new Vue({
+    el: "#instanceIdFields",
+    data: instanceIdObject
+})
+
 $(document).ready(function() {
     window.currentId = 1;
     const $spinner = $("#spinner");
@@ -19,7 +35,7 @@ $(document).ready(function() {
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
-    $('#sendNotificationObject').click(function () {
+    $('#sendNotificationObject').click(function() {
         const $notificationPayload = $('#notificationPayload');
         if ($(this).is(':checked')) {
             $notificationPayload.show();
@@ -58,7 +74,7 @@ $(document).ready(function() {
         }
     });
 
-    $sendNotification.click(function () {
+    $sendNotification.click(function() {
         $("#txtTo").val(window.token);
 
         $("#notificationDiv").show();
@@ -79,7 +95,7 @@ $(document).ready(function() {
             updateTopics(topics);
         }
     });
-    $manageTopics.click(function () {
+    $manageTopics.click(function() {
 
         $("#topics").show()
     });
@@ -171,20 +187,20 @@ function sendNotification() {
         url: "https://fcm.googleapis.com/fcm/send",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(cleanedData),
-        beforeSend: function (request) {
+        beforeSend: function(request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function (data) {
+        success: function(data) {
             console.log(this.url);
             console.log(this.data);
             console.log("Sent");
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({'message': 'Notification Sent'});
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             const err = xhr.responseText;
 
             console.log(err);
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({'message': 'Notification Not Sent'});
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
 
         }
     };
@@ -234,10 +250,10 @@ function getInstanceIdInfo(instanceId, key) {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function (request) {
+        beforeSend: function(request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function (data) {
+        success: function(data) {
             // console.log(data);
             console.log(this.url);
             console.log(this.data);
@@ -300,15 +316,15 @@ function updateTopics(topics) {
             method: "POST",
             url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/" + topic,
             contentType: "application/json; charset=utf-8",
-            beforeSend: function (request) {
+            beforeSend: function(request) {
                 request.setRequestHeader("Authorization", "key=" + key);
             },
-            success: function (data) {
+            success: function(data) {
                 console.log('subscribed');
                 console.log(this.url);
                 console.log(this.data);
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
                 $("#spinner").hide();
                 $("#response").text(err.error);

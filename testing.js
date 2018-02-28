@@ -1,2 +1,2 @@
-var testingApiKey=
-var testingToken =
+// var testingApiKey=
+// var testingToken =
