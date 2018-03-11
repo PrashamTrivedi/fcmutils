@@ -5,7 +5,16 @@ var platform;
 var packageName;
 var currentId;
 
-var instanceIdObject = { appKey: '', deviceToken: '' }
+var instanceIdObject = {
+    appKey: '',
+    deviceToken: ''
+};
+var testInstanceIdObject = {
+    appKey: 'AAAAV_XQG4M:APA91bF1vDmS_LM0tZ52-Eboxm_kHIiBxl3wJ9kpd7vUs65TQ0HWcuoFKAlADFDLAC8dMVy1Qs0xRzVz04bi4uACarvXFjtILvuHx-XbSNgqJAzE0lsqTAVuGzwzx3tSMDuYKecBR2rOuOnK9sJqHBFGihl_koc5Rg',
+    deviceToken: 'eqCAA2NdWMk:APA91bFSkU3F0u9Aj3uP66LFJULeBXvNldJPPqN7Ena0d-ZJsCQeQzFLpTQsW1XJDn2uWxStKvDUm0oZmccL9BPxNk-GAuFVOJRVc1aGgVheMVUVK9_TGyHNWRiDE1OkicJYKMj1JaTg'
+};
+var isResponseAvailable = false;
+var isDataLoading = false;
 var app = new Vue({
     el: '#version',
 
@@ -21,7 +30,20 @@ var instanceIdThing = new Vue({
     data: instanceIdObject
 })
 
-$(document).ready(function() {
+
+var visibility = new Vue({
+    el: "#responseVisibility",
+    data: {
+        hasResponse: isResponseAvailable,
+        isLoading: isDataLoading
+    },
+    methods: {
+        verifyToken: function () {
+            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey)
+        }
+    }
+})
+$(document).ready(function () {
     window.currentId = 1;
     const $spinner = $("#spinner");
     const $sendNotification = $("#sendNotification");
@@ -35,7 +57,7 @@ $(document).ready(function() {
     $("#topicDiv").hide();
     $("#notificationDiv").hide();
 
-    $('#sendNotificationObject').click(function() {
+    $('#sendNotificationObject').click(function () {
         const $notificationPayload = $('#notificationPayload');
         if ($(this).is(':checked')) {
             $notificationPayload.show();
@@ -46,7 +68,7 @@ $(document).ready(function() {
     });
 
 
-    $('#verifyTokens').click(function() {
+    $('#verifyTokens').click(function () {
 
         // Refresh all of the forecasts
         let $txtApplicationKey = $("#txtApplicationKey");
@@ -74,13 +96,13 @@ $(document).ready(function() {
         }
     });
 
-    $sendNotification.click(function() {
+    $sendNotification.click(function () {
         $("#txtTo").val(window.token);
 
         $("#notificationDiv").show();
     });
 
-    $("#updateTopics").click(function() {
+    $("#updateTopics").click(function () {
         const $txtTopics = $("#txtTopics");
         const topics = $txtTopics.val();
         if (topics === "") {
@@ -95,17 +117,17 @@ $(document).ready(function() {
             updateTopics(topics);
         }
     });
-    $manageTopics.click(function() {
+    $manageTopics.click(function () {
 
         $("#topics").show()
     });
 
-    $("#addKeyValue").click(function() {
+    $("#addKeyValue").click(function () {
         addKeyValue()
     });
 
 
-    $("#send").click(function() {
+    $("#send").click(function () {
         sendNotification();
     });
 });
@@ -187,20 +209,24 @@ function sendNotification() {
         url: "https://fcm.googleapis.com/fcm/send",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(cleanedData),
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
+        success: function (data) {
             console.log(this.url);
             console.log(this.data);
             console.log("Sent");
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Sent' });
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({
+                'message': 'Notification Sent'
+            });
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             const err = xhr.responseText;
 
             console.log(err);
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({ 'message': 'Notification Not Sent' });
+            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({
+                'message': 'Notification Not Sent'
+            });
 
         }
     };
@@ -245,20 +271,19 @@ function addKeyValue() {
 function getInstanceIdInfo(instanceId, key) {
     window.key = key;
     window.token = instanceId;
-    $("#spinner").show();
+    visibility.isLoading = true;
     const settings = {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
-        success: function(data) {
+        success: function (data) {
             // console.log(data);
             console.log(this.url);
             console.log(this.data);
-            $("#spinner").hide();
-
+            var isDataLoading = false;
             if (data.platform === "ANDROID") {
                 $("#platformIcon").text("phone_android")
             } else if (data.platform === "IOS") {
@@ -292,7 +317,8 @@ function getInstanceIdInfo(instanceId, key) {
         },
         error: (xhr, status, error) => {
             const err = xhr.responseText;
-            $("#spinner").hide();
+            isDataLoading = false;
+            visibility.isLoading = false;
             console.log(err);
             const $response = $("#response");
             $('#appName').text("Error in checking data, Please check console for details");
@@ -311,20 +337,20 @@ function updateTopics(topics) {
 
     const topicArray = topics.split(",");
 
-    topicArray.forEach(function(topic) {
+    topicArray.forEach(function (topic) {
         const settings = {
             method: "POST",
             url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/" + topic,
             contentType: "application/json; charset=utf-8",
-            beforeSend: function(request) {
+            beforeSend: function (request) {
                 request.setRequestHeader("Authorization", "key=" + key);
             },
-            success: function(data) {
+            success: function (data) {
                 console.log('subscribed');
                 console.log(this.url);
                 console.log(this.data);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
                 $("#spinner").hide();
                 $("#response").text(err.error);

@@ -45,13 +45,14 @@
                             <a id="version" href="https://github.com/PrashamTrivedi/fcmutils/blob/master/changelog.md">
                                 {{ version }}
                             </a>
-                    </span>
+                        </span>
 
                     </h2>
                 </div>
 
                 <div class="mdl-typography--headline">
-                    Start with verifying your token,<br> Enter your API key and FCM token to get started
+                    Start with verifying your token,
+                    <br> Enter your API key and FCM token to get started
                 </div>
 
 
@@ -86,34 +87,34 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mdl-card__actions mdl-card--border">
-                <button id="verifyTokens" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Verify Tokens
-            </button>
-                <button id="sendNotification" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Send Notification
-            </button>
-                <button id="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Subscribe Topics
-            </button>
-            </div>
-            <div class="centerAutoWidth mdl-spinner mdl-js-spinner is-active" id="spinner"></div>
-            <div id="response" class="padding20 mdl-typography--display-5">
-
-
-                <div class="sides">
-                    <i class="leftInverse material-icons" id="platformIcon"></i>
-                    <div id="appName" class="rightInverse"></div>
+            <div id="responseVisibility">
+                <div class="mdl-card__actions mdl-card--border">
+                    <button id="verifyTokens" v-on:click="verifyToken" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Verify Tokens
+                    </button>
+                    <button id="sendNotification" v-if="hasResponse" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Send Notification
+                    </button>
+                    <button id="manageTopics" v-if="hasResponse" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Subscribe Topics
+                    </button>
                 </div>
+                <div v-if="isLoading" class="centerAutoWidth mdl-spinner mdl-js-spinner is-active" id="spinner"></div>
+                <div id="response" v-if="hasResponse" class="padding20 mdl-typography--display-5">
 
-            </div>
-            <div id="topicDiv" style="padding: 10px;">
-                <h4>Topics</h4>
-                <ul id="topicsList" class="mdl-list">
-                </ul>
-            </div>
 
+                    <div class="sides">
+                        <i class="leftInverse material-icons" id="platformIcon"></i>
+                        <div id="appName" class="rightInverse"></div>
+                    </div>
+
+                </div>
+                <div id="topicDiv" style="padding: 10px;">
+                    <h4>Topics</h4>
+                    <ul id="topicsList" class="mdl-list">
+                    </ul>
+                </div>
+            </div>
 
         </div>
 
@@ -128,15 +129,17 @@
 
 
                 <button id="updateTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Add Topics
-            </button>
+                    Add Topics
+                </button>
             </div>
         </div>
 
         <div id="notificationDiv" class="center padding20 mdl-card mdl-shadow--2dp">
 
-            <h3>Notification <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server
-            Reference)</a></h3>
+            <h3>Notification
+                <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server Reference)
+                </a>
+            </h3>
             <div class="sides">
                 <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" id="txtTo" autocomplete="on">
@@ -184,19 +187,19 @@
                         </div>
                     </div>
                     <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable" style="margin:50px 10px 0;">
-                    <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
-                    <span class="mdl-checkbox__label">Content Available</span>
-                </label>
+                        <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
+                        <span class="mdl-checkbox__label">Content Available</span>
+                    </label>
                     <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun" style="margin:50px 10px 0;">
-                    <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
-                    <span class="mdl-checkbox__label">Dry Run</span>
-                </label>
+                        <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
+                        <span class="mdl-checkbox__label">Dry Run</span>
+                    </label>
                 </div>
             </div>
             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="sendNotificationObject">
-            <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" checked>
-            <span class="mdl-switch__label">Send Notification Payload</span>
-        </label>
+                <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" checked>
+                <span class="mdl-switch__label">Send Notification Payload</span>
+            </label>
             <div id="notificationPayload">
 
                 <h4>Notification Payload</h4>
@@ -297,14 +300,14 @@
                 </ul>
 
                 <button id="addKeyValue" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Add
-            </button>
+                    Add
+                </button>
 
             </div>
             <div class="mdl-card__actions mdl-card--border">
                 <button id="send" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                Send Notification
-            </button>
+                    Send Notification
+                </button>
             </div>
         </div>
         <div id="snackBar" class="mdl-js-snackbar mdl-snackbar">
@@ -321,47 +324,47 @@
             width: 80%;
             margin: 30px auto auto;
         }
-        
+
         .centerAutoWidth {
             margin: auto;
         }
-        
+
         .demo-ribbon {
             width: 100%;
             height: 40vh;
             background-color: rgb(255, 193, 7) !important;
         }
-        
+
         .content {
             margin-top: -35vh;
         }
-        
+
         .padding20 {
             padding: 20px;
         }
-        
+
         .left {
             float: left;
             width: 75%;
             overflow: hidden;
         }
-        
+
         .leftInverse {
             float: left;
             width: auto;
             overflow: hidden;
         }
-        
+
         .topMargin50 {
             margin-top: 50px;
         }
-        
+
         .right {
             float: left;
             width: 25%;
             overflow: hidden;
         }
-        
+
         .rightInverse {
             float: left;
             width: auto;
@@ -375,7 +378,7 @@
                 families: ['Roboto:300,400,500,700']
             }
         };
-        (function() {
+        (function () {
             const wf = document.createElement('script');
             wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
             wf.type = 'text/javascript';
