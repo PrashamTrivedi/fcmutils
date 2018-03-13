@@ -7,12 +7,22 @@ var currentId;
 
 var instanceIdObject = {
     appKey: '',
-    deviceToken: ''
+    deviceToken: '',
+    isFocused: false
 };
-var testInstanceIdObject = {
-    appKey: 'AAAAV_XQG4M:APA91bF1vDmS_LM0tZ52-Eboxm_kHIiBxl3wJ9kpd7vUs65TQ0HWcuoFKAlADFDLAC8dMVy1Qs0xRzVz04bi4uACarvXFjtILvuHx-XbSNgqJAzE0lsqTAVuGzwzx3tSMDuYKecBR2rOuOnK9sJqHBFGihl_koc5Rg',
-    deviceToken: 'eqCAA2NdWMk:APA91bFSkU3F0u9Aj3uP66LFJULeBXvNldJPPqN7Ena0d-ZJsCQeQzFLpTQsW1XJDn2uWxStKvDUm0oZmccL9BPxNk-GAuFVOJRVc1aGgVheMVUVK9_TGyHNWRiDE1OkicJYKMj1JaTg'
+
+
+var iidResponse = {
+    applicationVersion: '',
+    application: '',
+    platform: '',
+    rel: [topicResponse]
 };
+
+var topicResponse = {
+    name: '',
+    addDate: ''
+}
 var isResponseAvailable = false;
 var isDataLoading = false;
 var app = new Vue({
@@ -27,7 +37,18 @@ var app = new Vue({
 
 var instanceIdThing = new Vue({
     el: "#instanceIdFields",
-    data: instanceIdObject
+    data: instanceIdObject,
+    computed: {
+        classObject: function () {
+            console.log(this.appKey)
+            console.log(this.appKey != '' || this.appKey != undefined)
+            if (this.isFocused) {
+                return 'is-focused'
+            } else {
+                return ''
+            }
+        }
+    }
 })
 
 
@@ -39,98 +60,105 @@ var visibility = new Vue({
     },
     methods: {
         verifyToken: function () {
+            visibility.isLoading = true;
+
             getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey)
+        },
+        useTestValues: function () {
+            instanceIdThing.appKey = testInstanceIdObject.appKey
+            instanceIdThing.deviceToken = testInstanceIdObject.deviceToken
+            instanceIdThing.isFocused = true
         }
     }
 })
-$(document).ready(function () {
-    window.currentId = 1;
-    const $spinner = $("#spinner");
-    const $sendNotification = $("#sendNotification");
-    const $manageTopics = $("#manageTopics");
+// $(document).ready(function () {
+//     window.currentId = 1;
+//     const $spinner = $("#spinner");
+//     const $sendNotification = $("#sendNotification");
+//     const $manageTopics = $("#manageTopics");
 
-    $spinner.hide();
-    $("#response").hide();
-    $sendNotification.hide();
-    $manageTopics.hide();
-    $("#topics").hide();
-    $("#topicDiv").hide();
-    $("#notificationDiv").hide();
+//     $spinner.hide();
+//     $("#response").hide();
+//     $sendNotification.hide();
+//     $manageTopics.hide();
+//     $("#topics").hide();
+//     $("#topicDiv").hide();
+//     $("#notificationDiv").hide();
 
-    $('#sendNotificationObject').click(function () {
-        const $notificationPayload = $('#notificationPayload');
-        if ($(this).is(':checked')) {
-            $notificationPayload.show();
-        } else {
-            $notificationPayload.hide();
+//     $('#sendNotificationObject').click(function () {
+//         const $notificationPayload = $('#notificationPayload');
+//         if ($(this).is(':checked')) {
+//             $notificationPayload.show();
+//         } else {
+//             $notificationPayload.hide();
 
-        }
-    });
-
-
-    $('#verifyTokens').click(function () {
-
-        // Refresh all of the forecasts
-        let $txtApplicationKey = $("#txtApplicationKey");
-        let $txtToken = $("#txtToken");
-
-        const key = $txtApplicationKey.val();
-        const token = $txtToken.val();
-        if (key === "") {
-            $txtApplicationKey.prop('required', true);
-            $txtApplicationKey.parent().addClass('is-invalid');
-        } else {
-            $txtApplicationKey.prop('required', false);
-            $txtApplicationKey.parent().removeClass('is-invalid');
-        }
-        if (token === "") {
-            $txtToken.prop('required', true);
-            $txtToken.parent().addClass('is-invalid');
-        } else {
-            $txtToken.prop('required', false);
-            $txtToken.parent().removeClass('is-invalid');
-        }
-
-        if (token !== "" && key !== "") {
-            getInstanceIdInfo(token, key);
-        }
-    });
-
-    $sendNotification.click(function () {
-        $("#txtTo").val(window.token);
-
-        $("#notificationDiv").show();
-    });
-
-    $("#updateTopics").click(function () {
-        const $txtTopics = $("#txtTopics");
-        const topics = $txtTopics.val();
-        if (topics === "") {
-            $txtTopics.prop('required', true);
-            $txtTopics.parent().addClass('is-invalid');
-        } else {
-            $txtTopics.prop('required', false);
-            $txtTopics.parent().removeClass('is-invalid');
-        }
-        componentHandler.upgradeDom();
-        if (topics !== "") {
-            updateTopics(topics);
-        }
-    });
-    $manageTopics.click(function () {
-
-        $("#topics").show()
-    });
-
-    $("#addKeyValue").click(function () {
-        addKeyValue()
-    });
+//         }
+//     });
 
 
-    $("#send").click(function () {
-        sendNotification();
-    });
-});
+//     $('#verifyTokens').click(function () {
+
+//         // Refresh all of the forecasts
+//         let $txtApplicationKey = $("#txtApplicationKey");
+//         let $txtToken = $("#txtToken");
+
+//         const key = $txtApplicationKey.val();
+//         const token = $txtToken.val();
+//         if (key === "") {
+//             $txtApplicationKey.prop('required', true);
+//             $txtApplicationKey.parent().addClass('is-invalid');
+//         } else {
+//             $txtApplicationKey.prop('required', false);
+//             $txtApplicationKey.parent().removeClass('is-invalid');
+//         }
+//         if (token === "") {
+//             $txtToken.prop('required', true);
+//             $txtToken.parent().addClass('is-invalid');
+//         } else {
+//             $txtToken.prop('required', false);
+//             $txtToken.parent().removeClass('is-invalid');
+//         }
+
+//         if (token !== "" && key !== "") {
+//             getInstanceIdInfo(token, key);
+//         }
+//     });
+
+//     $sendNotification.click(function () {
+//         $("#txtTo").val(window.token);
+
+//         $("#notificationDiv").show();
+//     });
+
+//     $("#updateTopics").click(function () {
+//         const $txtTopics = $("#txtTopics");
+//         const topics = $txtTopics.val();
+//         if (topics === "") {
+//             $txtTopics.prop('required', true);
+//             $txtTopics.parent().addClass('is-invalid');
+//         } else {
+//             $txtTopics.prop('required', false);
+//             $txtTopics.parent().removeClass('is-invalid');
+//         }
+//         componentHandler.upgradeDom();
+//         if (topics !== "") {
+//             updateTopics(topics);
+//         }
+//     });
+//     $manageTopics.click(function () {
+
+//         $("#topics").show()
+//     });
+
+//     $("#addKeyValue").click(function () {
+//         addKeyValue()
+//     });
+
+
+//     $("#send").click(function () {
+//         sendNotification();
+//     });
+// });
 
 
 function sendNotification() {
@@ -269,9 +297,10 @@ function addKeyValue() {
 }
 
 function getInstanceIdInfo(instanceId, key) {
-    window.key = key;
-    window.token = instanceId;
-    visibility.isLoading = true;
+    // window.key = key;
+    // window.token = instanceId;
+    iidResponse = new Object();
+    iidResponse.rel = [];
     const settings = {
         method: "GET",
         url: "https://iid.googleapis.com/iid/info/" + instanceId + "?details=true",
@@ -283,36 +312,53 @@ function getInstanceIdInfo(instanceId, key) {
             // console.log(data);
             console.log(this.url);
             console.log(this.data);
-            var isDataLoading = false;
-            if (data.platform === "ANDROID") {
-                $("#platformIcon").text("phone_android")
-            } else if (data.platform === "IOS") {
-                $("#platformIcon").text("phone_iphone")
-            } else if (data.platform === "CHROME") {
-                $("#platformIcon").text("laptop_chromebook")
-            }
-            window.packageName = data.application
-            var $response = $("#response");
-            $response.show();
-
-            $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
-            $("#sendNotification").show();
-            $("#manageTopics").show();
+            iidResponse.applicationVersion = data.applicationVersion;
+            iidResponse.application = data.application;
+            iidResponse.platform = data.platform;
             if (data.rel !== undefined && data.rel.topics !== undefined) {
-                $("#topicDiv").show();
-                const $topicsList = $("#topicsList");
-                $topicsList.empty();
                 for (const topic in data.rel.topics) {
-                    const topicName = topic;
+                    topicResponse = {};
+                    console.log(topic);
+                    topicResponse.name = topic;
                     var topicDate = data.rel.topics[topic].addDate;
-                    console.log(topicName);
-                    console.log(topicDate);
-                    $topicsList.append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
-                    <span class="mdl-list__item-primary-content">Name: ${topicName}
-                    <span class="mdl-list__item-sub-title">Subscribed On: ${topicDate}</span></span></li>`);
+                    topicResponse.addDate = topicDate;
+                    if (topicResponse != undefined)
+                        iidResponse.rel.push(topicResponse)
                 }
-
             }
+
+
+            console.log(iidResponse);
+
+            // if (data.platform === "ANDROID") {
+            //     $("#platformIcon").text("phone_android")
+            // } else if (data.platform === "IOS") {
+            //     $("#platformIcon").text("phone_iphone")
+            // } else if (data.platform === "CHROME") {
+            //     $("#platformIcon").text("laptop_chromebook")
+            // }
+            // window.packageName = data.application
+            // var $response = $("#response");
+            // $response.show();
+
+            // $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
+            // $("#sendNotification").show();
+            // $("#manageTopics").show();
+            // if (data.rel !== undefined && data.rel.topics !== undefined) {
+            //     $("#topicDiv").show();
+            //     const $topicsList = $("#topicsList");
+            //     $topicsList.empty();
+            //     for (const topic in data.rel.topics) {
+            //         const topicName = topic;
+            //         var topicDate = data.rel.topics[topic].addDate;
+            //         console.log(topicName);
+            //         console.log(topicDate);
+            //         $topicsList.append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
+            //         <span class="mdl-list__item-primary-content">Name: ${topicName}
+            //         <span class="mdl-list__item-sub-title">Subscribed On: ${topicDate}</span></span></li>`);
+            //     }
+
+            // }
 
         },
         error: (xhr, status, error) => {

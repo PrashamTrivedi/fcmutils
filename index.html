@@ -58,8 +58,8 @@
 
                 <div id="instanceIdFields">
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="txtApplicationKey" v-model="appKey" autocomplete="on">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
+                            <input class="mdl-textfield__input" type="text" id="txtApplicationKey"  v-model="appKey" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
                             <span class="mdl-textfield__error">API Key is required</span>
                         </div>
@@ -73,7 +73,7 @@
                     </div>
 
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
                             <input class="mdl-textfield__input" type="text" id="txtToken" v-model="deviceToken" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtToken">FCM Device token</label>
                             <span class="mdl-textfield__error">Device token is required</span>
@@ -91,6 +91,9 @@
                 <div class="mdl-card__actions mdl-card--border">
                     <button id="verifyTokens" v-on:click="verifyToken" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Verify Tokens
+                    </button>
+                    <button id="useTestValues" v-on:click="useTestValues" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Use Test Values
                     </button>
                     <button id="sendNotification" v-if="hasResponse" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Send Notification
