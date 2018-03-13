@@ -107,8 +107,11 @@
                 <div id="response" v-if="hasResponse" class="padding20 mdl-typography--display-5">
                     <div class="sides">
                         <i class="leftInverse material-icons" id="platformIcon">{{ platformIcon }}</i>
-                        <div id="appName" class="rightInverse">{{ application + '('+applicationVersion+')' }}</div>
+                        <div id="appName" class="rightInverse">{{ application }} ({{applicationVersion}})</div>
                     </div>
+                </div>
+                <div v-else>
+                    {{ errorMessage }}
                 </div>
                 <div id="topicDiv" v-if="hasResponse" style="padding: 10px;">
                     <h4>Topics</h4>
@@ -124,13 +127,13 @@
             <!-- V-if vs V-Show: V-if adds components manually without js and css bindings, while V:show toggles visibility -->
             <div id="topics" v-show="showTopics" class="center padding20 mdl-card mdl-shadow--2dp">
                 <h3>Add topics here</h3>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
+                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="topicsObject">
+                    <input class="mdl-textfield__input" type="text" id="txtTopics" v-model="topicNames" autocomplete="on">
                     <label class="mdl-textfield__label" for="txtTopics">Enter Topics to add(Separated by comma)</label>
                     <span class="mdl-textfield__error">Please enter topics to add</span>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <button id="updateTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="updateTopics" v-on:click="subscribeTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Add Topics
                     </button>
                 </div>

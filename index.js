@@ -8,7 +8,8 @@ var currentId;
 var instanceIdObject = {
     appKey: '',
     deviceToken: '',
-    isFocused: false
+    isFocused: false,
+    toValidate: false
 };
 
 
@@ -47,7 +48,15 @@ var instanceIdThing = new Vue({
             if (this.isFocused) {
                 return 'is-focused'
             } else {
-                return ''
+                if (this.toValidate) {
+                    if (this.appKey == '' || this.appKey == undefined) {
+                        return 'is-invalid'
+                    } else if (this.deviceToken == '' || this.deviceToken == undefined) {
+                        return 'is-invalid'
+                    }
+                } else {
+                    return ''
+                }
             }
         }
     }
@@ -57,7 +66,32 @@ var functions = new Vue({
     el: "#functionality",
     data: {
         showTopics: false,
-        sendNotifications: false
+        sendNotifications: false,
+        topicNames: '',
+        toVerify: false
+
+    },
+    methods: {
+        subscribeTopics: function () {
+            this.toVerify = true;
+
+            console.log(instanceIdObject.appKey)
+            console.log(instanceIdObject.deviceToken)
+            updateTopics(this.topicNames, data => {
+
+            }, error => {
+
+            })
+        }
+    },
+    computed: {
+        topicsObject: function () {
+            if (this.toVerify && (this.topicNames == '' || this.topicNames == undefined)) {
+                return 'is-invalid'
+            } else {
+                return ''
+            }
+        }
     }
 })
 
@@ -70,12 +104,14 @@ var visibility = new Vue({
         application: iidResponse.application,
         platformIcon: iidResponse.platformIcon,
         applicationVersion: iidResponse.applicationVersion,
+        errorMessage: '',
         topics: []
     },
     methods: {
         verifyToken: function () {
-            visibility.isLoading = true;
+            this.isLoading = true;
 
+            instanceIdThing.toValidate = true
             getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test => {
                 visibility.isLoading = false;
                 if (test != undefined) {
@@ -92,7 +128,10 @@ var visibility = new Vue({
                 console.log(test);
 
             }, errorMessage => {
-
+                this.hasResponse = false;
+                console.log(errorMessage);
+                visibility.isLoading = false;
+                this.errorMessage = errorMessage;
             })
         },
         useTestValues: function () {
@@ -111,64 +150,13 @@ var visibility = new Vue({
 });
 
 
+
 Vue.component('topic-item', {
     props: ['topic'],
     template: `<li  class="mdl-list__item mdl-list__item--two-line">
             <span class="mdl-list__item-primary-content">Name: {{topic.name}}
             <span class="mdl-list__item-sub-title">Subscribed On: {{topic.addDate}}</span></span></li>`
-})
-// $(document).ready(function () {
-//     window.currentId = 1;
-//     const $spinner = $("#spinner");
-//     const $sendNotification = $("#sendNotification");
-//     const $manageTopics = $("#manageTopics");
-
-//     $spinner.hide();
-//     $("#response").hide();
-//     $sendNotification.hide();
-//     $manageTopics.hide();
-//     $("#topics").hide();
-//     $("#topicDiv").hide();
-//     $("#notificationDiv").hide();
-
-//     $('#sendNotificationObject').click(function () {
-//         const $notificationPayload = $('#notificationPayload');
-//         if ($(this).is(':checked')) {
-//             $notificationPayload.show();
-//         } else {
-//             $notificationPayload.hide();
-
-//         }
-//     });
-
-
-//     $('#verifyTokens').click(function () {
-
-//         // Refresh all of the forecasts
-//         let $txtApplicationKey = $("#txtApplicationKey");
-//         let $txtToken = $("#txtToken");
-
-//         const key = $txtApplicationKey.val();
-//         const token = $txtToken.val();
-//         if (key === "") {
-//             $txtApplicationKey.prop('required', true);
-//             $txtApplicationKey.parent().addClass('is-invalid');
-//         } else {
-//             $txtApplicationKey.prop('required', false);
-//             $txtApplicationKey.parent().removeClass('is-invalid');
-//         }
-//         if (token === "") {
-//             $txtToken.prop('required', true);
-//             $txtToken.parent().addClass('is-invalid');
-//         } else {
-//             $txtToken.prop('required', false);
-//             $txtToken.parent().removeClass('is-invalid');
-//         }
-
-//         if (token !== "" && key !== "") {
-//             getInstanceIdInfo(token, key);
-//         }
-//     });
+});
 
 //     $sendNotification.click(function () {
 //         $("#txtTo").val(window.token);
@@ -378,9 +366,11 @@ function getInstanceIdInfo(instanceId, key, successCallback, failureCallback) {
             }
 
             successCallback(iidResponse);
-            
+
         },
         error: (xhr, status, error) => {
+            console.log(error);
+            console.log(xhr.responseText);
             const err = xhr.responseText;
             iidResponse.errorMessage = err;
             failureCallback(err)
@@ -390,8 +380,8 @@ function getInstanceIdInfo(instanceId, key, successCallback, failureCallback) {
 
 }
 
-function updateTopics(topics) {
-    console.log(window.key);
+function updateTopics(topics, successFun, errorFun) {
+    console.log(iidResponse);
     console.log(window.token);
     console.log(topics);
 
@@ -400,23 +390,20 @@ function updateTopics(topics) {
     topicArray.forEach(function (topic) {
         const settings = {
             method: "POST",
-            url: "https://iid.googleapis.com/iid/v1/" + window.token + "/rel/topics/" + topic,
+            url: "https://iid.googleapis.com/iid/v1/" + instanceIdObject.deviceToken + "/rel/topics/" + topic,
             contentType: "application/json; charset=utf-8",
             beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "key=" + key);
+                request.setRequestHeader("Authorization", "key=" + instanceIdObject.appKey);
             },
             success: function (data) {
                 console.log('subscribed');
                 console.log(this.url);
                 console.log(this.data);
+                successFun(this.data)
             },
             error: function (xhr, status, error) {
                 var err = JSON.parse(xhr.responseText);
-                $("#spinner").hide();
-                $("#response").text(err.error);
-                console.log(err)
-                $("#response").show();
-
+                errorFun(err.error);
             }
         };
         $.ajax(settings)
