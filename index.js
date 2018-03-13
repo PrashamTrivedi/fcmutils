@@ -62,7 +62,8 @@ var visibility = new Vue({
         verifyToken: function () {
             visibility.isLoading = true;
 
-            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey)
+           var test =  getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey)
+           console.log(test);
         },
         useTestValues: function () {
             instanceIdThing.appKey = testInstanceIdObject.appKey
@@ -318,7 +319,6 @@ function getInstanceIdInfo(instanceId, key) {
             if (data.rel !== undefined && data.rel.topics !== undefined) {
                 for (const topic in data.rel.topics) {
                     topicResponse = {};
-                    console.log(topic);
                     topicResponse.name = topic;
                     var topicDate = data.rel.topics[topic].addDate;
                     topicResponse.addDate = topicDate;
@@ -329,6 +329,8 @@ function getInstanceIdInfo(instanceId, key) {
 
 
             console.log(iidResponse);
+
+            return iidResponse;
 
             // if (data.platform === "ANDROID") {
             //     $("#platformIcon").text("phone_android")
