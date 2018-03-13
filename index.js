@@ -16,6 +16,8 @@ var iidResponse = {
     applicationVersion: '',
     application: '',
     platform: '',
+    platformIcon: '',
+    errorMessage: '',
     rel: [topicResponse]
 };
 
@@ -56,14 +58,34 @@ var visibility = new Vue({
     el: "#responseVisibility",
     data: {
         hasResponse: isResponseAvailable,
-        isLoading: isDataLoading
+        isLoading: isDataLoading,
+        application: iidResponse.application,
+        platformIcon: iidResponse.platformIcon,
+        applicationVersion: iidResponse.applicationVersion,
+        topics: []
     },
     methods: {
         verifyToken: function () {
             visibility.isLoading = true;
 
-           var test =  getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey)
-           console.log(test);
+            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test=>{
+                visibility.isLoading = false;
+                if (test != undefined) {
+                    console.log(test);
+                    console.log(test.rel.application);
+                    console.log(test.application);
+                    console.log(test.applicationVersion);
+                    this.hasResponse = true;
+                    this.application = test.application;
+                    this.platformIcon = test.platformIcon;
+                    this.applicationVersion = test.applicationVersion;
+                    this.topics = iidResponse.rel;
+                }
+                console.log(test);
+    
+            }, errorMessage=>{
+                
+            })
         },
         useTestValues: function () {
             instanceIdThing.appKey = testInstanceIdObject.appKey
@@ -71,6 +93,14 @@ var visibility = new Vue({
             instanceIdThing.isFocused = true
         }
     }
+});
+
+
+Vue.component('topic-item', {
+    props: ['topic'],
+    template: `<li  class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">Name: {{topic.name}}
+            <span class="mdl-list__item-sub-title">Subscribed On: {{topic.addDate}}</span></span></li>`
 })
 // $(document).ready(function () {
 //     window.currentId = 1;
@@ -297,7 +327,7 @@ function addKeyValue() {
     componentHandler.upgradeDom();
 }
 
-function getInstanceIdInfo(instanceId, key) {
+function getInstanceIdInfo(instanceId, key, successCallback, failureCallback) {
     // window.key = key;
     // window.token = instanceId;
     iidResponse = new Object();
@@ -310,11 +340,16 @@ function getInstanceIdInfo(instanceId, key) {
             request.setRequestHeader("Authorization", "key=" + key);
         },
         success: function (data) {
-            // console.log(data);
-            console.log(this.url);
-            console.log(this.data);
+            console.log(data);
             iidResponse.applicationVersion = data.applicationVersion;
             iidResponse.application = data.application;
+            if (data.platform === "ANDROID") {
+                iidResponse.platformIcon = "phone_android"
+            } else if (data.platform === "IOS") {
+                iidResponse.platformIcon = "phone_iphone"
+            } else if (data.platform === "CHROME") {
+                iidResponse.platformIcon = "laptop_chromebook"
+            }
             iidResponse.platform = data.platform;
             if (data.rel !== undefined && data.rel.topics !== undefined) {
                 for (const topic in data.rel.topics) {
@@ -327,10 +362,8 @@ function getInstanceIdInfo(instanceId, key) {
                 }
             }
 
-
-            console.log(iidResponse);
-
-            return iidResponse;
+            successCallback(iidResponse);
+            // console.log(iidResponse)
 
             // if (data.platform === "ANDROID") {
             //     $("#platformIcon").text("phone_android")
@@ -365,13 +398,8 @@ function getInstanceIdInfo(instanceId, key) {
         },
         error: (xhr, status, error) => {
             const err = xhr.responseText;
-            isDataLoading = false;
-            visibility.isLoading = false;
-            console.log(err);
-            const $response = $("#response");
-            $('#appName').text("Error in checking data, Please check console for details");
-            $response.show();
-
+            iidResponse.errorMessage = err;
+            failureCallback(err)
         }
     };
     $.ajax(settings)
