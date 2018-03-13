@@ -57,8 +57,8 @@
 
 
                 <div id="instanceIdFields">
+
                     <div class="sides">
-                        
                         <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
                             <input class="mdl-textfield__input" type="text" id="txtApplicationKey" v-model="appKey" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
@@ -121,7 +121,8 @@
         </div>
 
         <div id="functionality">
-            <div id="topics" v-if="showTopics" class="center padding20 mdl-card mdl-shadow--2dp">
+            <!-- V-if vs V-Show: V-if adds components manually without js and css bindings, while V:show toggles visibility -->
+            <div id="topics" v-show="showTopics" class="center padding20 mdl-card mdl-shadow--2dp">
                 <h3>Add topics here</h3>
                 <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
@@ -135,7 +136,7 @@
                 </div>
             </div>
 
-            <div id="notificationDiv" v-if="sendNotifications" class="center padding20 mdl-card mdl-shadow--2dp">
+            <div id="notificationDiv" v-show="sendNotifications" class="center padding20 mdl-card mdl-shadow--2dp">
 
                 <h3>Notification
                     <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server Reference)

@@ -111,7 +111,6 @@ var visibility = new Vue({
 });
 
 
-
 Vue.component('topic-item', {
     props: ['topic'],
     template: `<li  class="mdl-list__item mdl-list__item--two-line">
