@@ -58,6 +58,7 @@
 
                 <div id="instanceIdFields">
                     <div class="sides">
+                        
                         <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
                             <input class="mdl-textfield__input" type="text" id="txtApplicationKey" v-model="appKey" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
@@ -95,10 +96,10 @@
                     <button id="useTestValues" v-on:click="useTestValues" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Use Test Values
                     </button>
-                    <button id="sendNotification" v-if="hasResponse" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="sendNotification" v-if="hasResponse" v-on:click="sendNotifications" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Send Notification
                     </button>
-                    <button id="manageTopics" v-if="hasResponse" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="manageTopics" v-if="hasResponse" v-on:click="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Subscribe Topics
                     </button>
                 </div>
@@ -119,196 +120,196 @@
 
         </div>
 
-        <div id="topics" class="center padding20 mdl-card mdl-shadow--2dp">
-            <h3>Add topics here</h3>
-            <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
-                <label class="mdl-textfield__label" for="txtTopics">Enter Topics to add(Separated by comma)</label>
-                <span class="mdl-textfield__error">Please enter topics to add</span>
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-
-
-                <button id="updateTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                    Add Topics
-                </button>
-            </div>
-        </div>
-
-        <div id="notificationDiv" class="center padding20 mdl-card mdl-shadow--2dp">
-
-            <h3>Notification
-                <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server Reference)
-                </a>
-            </h3>
-            <div class="sides">
-                <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtTo" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtTo">To...</label>
-                </div>
-                <div class="right topMargin50">
-                    <i id="to" class="material-icons">help_outline</i>
-                </div>
-                <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="to">
-                    Device Token, Group Or Topic: Where you want to send your notification
-                </div>
-            </div>
-            <div class="sides">
-                <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="number" id="txtTimeToLive" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtTimeToLive">Time To Live</label>
-                </div>
-
-            </div>
-            <div class="sides">
-                <div class="leftInverse" style="margin:0 10px 0 0;">
-                    <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding: 30px;">
-                        <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on">
-                        <label class="mdl-textfield__label" for="txtPriority">Priority</label>
-                    </div>
-                    <div class="rightInverse topMargin50">
-                        <i id="priority" class="material-icons">help_outline</i>
-                    </div>
-                    <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="priority">
-                        Notification Priority
-                    </div>
-                </div>
-
-                <div class="sides rightInverse" style="margin:0 10px;">
-                    <div class="leftInverse">
-                        <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="txtCollapseKey" autocomplete="on">
-                            <label class="mdl-textfield__label" for="txtCollapseKey">Collapse Key</label>
-                        </div>
-                        <div class="rightInverse topMargin50">
-                            <i id="collapseKey" class="material-icons">help_outline</i>
-                        </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="collapseKey">
-                            Collapse Key
-                        </div>
-                    </div>
-                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable" style="margin:50px 10px 0;">
-                        <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
-                        <span class="mdl-checkbox__label">Content Available</span>
-                    </label>
-                    <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun" style="margin:50px 10px 0;">
-                        <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
-                        <span class="mdl-checkbox__label">Dry Run</span>
-                    </label>
-                </div>
-            </div>
-            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="sendNotificationObject">
-                <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" checked>
-                <span class="mdl-switch__label">Send Notification Payload</span>
-            </label>
-            <div id="notificationPayload">
-
-                <h4>Notification Payload</h4>
-
-
+        <div id="functionality">
+            <div id="topics" v-if="showTopics" class="center padding20 mdl-card mdl-shadow--2dp">
+                <h3>Add topics here</h3>
                 <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtTitle" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtTitle">Title</label>
-                    <span class="mdl-textfield__error">Can not send notification without title...</span>
+                    <input class="mdl-textfield__input" type="text" id="txtTopics" autocomplete="on">
+                    <label class="mdl-textfield__label" for="txtTopics">Enter Topics to add(Separated by comma)</label>
+                    <span class="mdl-textfield__error">Please enter topics to add</span>
                 </div>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtBody" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtBody">Body</label>
+                <div class="mdl-card__actions mdl-card--border">
+                    <button id="updateTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Add Topics
+                    </button>
                 </div>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0; ">
-                    <input class="mdl-textfield__input" type="text" id="txtSound" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtSound">Sound</label>
+            </div>
+
+            <div id="notificationDiv" v-if="sendNotifications" class="center padding20 mdl-card mdl-shadow--2dp">
+
+                <h3>Notification
+                    <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server Reference)
+                    </a>
+                </h3>
+                <div class="sides">
+                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="txtTo" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtTo">To...</label>
+                    </div>
+                    <div class="right topMargin50">
+                        <i id="to" class="material-icons">help_outline</i>
+                    </div>
+                    <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="to">
+                        Device Token, Group Or Topic: Where you want to send your notification
+                    </div>
                 </div>
                 <div class="sides">
-                    <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0;">
-                            <input class="mdl-textfield__input" type="text" id="txtBadge" autocomplete="on">
-                            <label class="mdl-textfield__label" for="txtBadge">Badge(iOS)</label>
-                        </div>
-                        <div class="rightInverse" style="margin:20px 0 0 0;">
-                            <i id="badge" class="material-icons">help_outline</i>
-                        </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="badge">
-                            The value of the badge on the home screen app icon.
-                        </div>
-
-                    </div>
-                    <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
-                            <input class="mdl-textfield__input" type="text" id="txtChannel" autocomplete="on">
-                            <label class="mdl-textfield__label" for="txtChannel">Channel Id(Android)</label>
-                        </div>
-                        <div class="rightInverse" style="margin:20px 0 0 0;">
-                            <i id="channelId" class="material-icons">help_outline</i>
-                        </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="channelId">
-                            The notification's channel id (new in Android O).
-                        </div>
-                    </div>
-                    <div>
-                        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
-                            <input class="mdl-textfield__input" type="text" id="txtTag" autocomplete="on">
-                            <label class="mdl-textfield__label" for="txtTag">Tag(Android)</label>
-
-                        </div>
-                        <div class="rightInverse" style="margin:20px 0 0 0;">
-                            <i id="txtTagHelp" class="material-icons">help_outline</i>
-                        </div>
-                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="txtTagHelp">
-                            Identifier used to replace existing notifications in the notification drawe
-                        </div>
+                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="number" id="txtTimeToLive" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtTimeToLive">Time To Live</label>
                     </div>
 
                 </div>
-
-                <div>
-                    <div>
-                        <label for="txtColor">Icon Color(Android)</label>
-                        <input type="color" id="txtColor" autocomplete="on">
-
+                <div class="sides">
+                    <div class="leftInverse" style="margin:0 10px 0 0;">
+                        <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding: 30px;">
+                            <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on">
+                            <label class="mdl-textfield__label" for="txtPriority">Priority</label>
+                        </div>
+                        <div class="rightInverse topMargin50">
+                            <i id="priority" class="material-icons">help_outline</i>
+                        </div>
+                        <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="priority">
+                            Notification Priority
+                        </div>
                     </div>
 
-
-                </div>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtIcon" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtIcon">Icon For Android</label>
-                </div>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="txtClickAction" autocomplete="on">
-                    <label class="mdl-textfield__label" for="txtClickAction">Click Action</label>
-                </div>
-            </div>
-
-            <div id="dataPayload">
-                <h4>Data Payload</h4>
-                <ul id="dataKeyVal" class="mdl-list">
-                    <li class="mdl-list__item">
-                        <div class="mdl-list__item-primary-content">
-                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="key1" autocomplete="on">
-                                <label class="mdl-textfield__label" for="key1">Key</label>
+                    <div class="sides rightInverse" style="margin:0 10px;">
+                        <div class="leftInverse">
+                            <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="txtCollapseKey" autocomplete="on">
+                                <label class="mdl-textfield__label" for="txtCollapseKey">Collapse Key</label>
                             </div>
-                            <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0 10px;">
-                                <input class="mdl-textfield__input" type="text" id="val1" autocomplete="on">
-                                <label class="mdl-textfield__label" for="val1">Value</label>
+                            <div class="rightInverse topMargin50">
+                                <i id="collapseKey" class="material-icons">help_outline</i>
+                            </div>
+                            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="collapseKey">
+                                Collapse Key
                             </div>
                         </div>
+                        <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable" style="margin:50px 10px 0;">
+                            <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
+                            <span class="mdl-checkbox__label">Content Available</span>
+                        </label>
+                        <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun" style="margin:50px 10px 0;">
+                            <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
+                            <span class="mdl-checkbox__label">Dry Run</span>
+                        </label>
+                    </div>
+                </div>
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="sendNotificationObject">
+                    <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" checked>
+                    <span class="mdl-switch__label">Send Notification Payload</span>
+                </label>
+                <div id="notificationPayload">
 
-                    </li>
+                    <h4>Notification Payload</h4>
 
 
-                </ul>
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="txtTitle" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtTitle">Title</label>
+                        <span class="mdl-textfield__error">Can not send notification without title...</span>
+                    </div>
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="txtBody" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtBody">Body</label>
+                    </div>
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0; ">
+                        <input class="mdl-textfield__input" type="text" id="txtSound" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtSound">Sound</label>
+                    </div>
+                    <div class="sides">
+                        <div>
+                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0;">
+                                <input class="mdl-textfield__input" type="text" id="txtBadge" autocomplete="on">
+                                <label class="mdl-textfield__label" for="txtBadge">Badge(iOS)</label>
+                            </div>
+                            <div class="rightInverse" style="margin:20px 0 0 0;">
+                                <i id="badge" class="material-icons">help_outline</i>
+                            </div>
+                            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="badge">
+                                The value of the badge on the home screen app icon.
+                            </div>
 
-                <button id="addKeyValue" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                    Add
-                </button>
+                        </div>
+                        <div>
+                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
+                                <input class="mdl-textfield__input" type="text" id="txtChannel" autocomplete="on">
+                                <label class="mdl-textfield__label" for="txtChannel">Channel Id(Android)</label>
+                            </div>
+                            <div class="rightInverse" style="margin:20px 0 0 0;">
+                                <i id="channelId" class="material-icons">help_outline</i>
+                            </div>
+                            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="channelId">
+                                The notification's channel id (new in Android O).
+                            </div>
+                        </div>
+                        <div>
+                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
+                                <input class="mdl-textfield__input" type="text" id="txtTag" autocomplete="on">
+                                <label class="mdl-textfield__label" for="txtTag">Tag(Android)</label>
 
-            </div>
-            <div class="mdl-card__actions mdl-card--border">
-                <button id="send" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
-                    Send Notification
-                </button>
+                            </div>
+                            <div class="rightInverse" style="margin:20px 0 0 0;">
+                                <i id="txtTagHelp" class="material-icons">help_outline</i>
+                            </div>
+                            <div class="mdl-tooltip mdl-tooltip--right" data-mdl-for="txtTagHelp">
+                                Identifier used to replace existing notifications in the notification drawe
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <div>
+                            <label for="txtColor">Icon Color(Android)</label>
+                            <input type="color" id="txtColor" autocomplete="on">
+
+                        </div>
+
+
+                    </div>
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="txtIcon" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtIcon">Icon For Android</label>
+                    </div>
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="txtClickAction" autocomplete="on">
+                        <label class="mdl-textfield__label" for="txtClickAction">Click Action</label>
+                    </div>
+                </div>
+
+                <div id="dataPayload">
+                    <h4>Data Payload</h4>
+                    <ul id="dataKeyVal" class="mdl-list">
+                        <li class="mdl-list__item">
+                            <div class="mdl-list__item-primary-content">
+                                <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="key1" autocomplete="on">
+                                    <label class="mdl-textfield__label" for="key1">Key</label>
+                                </div>
+                                <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0 10px;">
+                                    <input class="mdl-textfield__input" type="text" id="val1" autocomplete="on">
+                                    <label class="mdl-textfield__label" for="val1">Value</label>
+                                </div>
+                            </div>
+
+                        </li>
+
+
+                    </ul>
+
+                    <button id="addKeyValue" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Add
+                    </button>
+
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                    <button id="send" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                        Send Notification
+                    </button>
+                </div>
             </div>
         </div>
         <div id="snackBar" class="mdl-js-snackbar mdl-snackbar">

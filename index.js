@@ -51,6 +51,14 @@ var instanceIdThing = new Vue({
             }
         }
     }
+});
+
+var functions = new Vue({
+    el: "#functionality",
+    data: {
+        showTopics: false,
+        sendNotifications: false
+    }
 })
 
 
@@ -68,7 +76,7 @@ var visibility = new Vue({
         verifyToken: function () {
             visibility.isLoading = true;
 
-            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test=>{
+            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test => {
                 visibility.isLoading = false;
                 if (test != undefined) {
                     console.log(test);
@@ -82,18 +90,26 @@ var visibility = new Vue({
                     this.topics = iidResponse.rel;
                 }
                 console.log(test);
-    
-            }, errorMessage=>{
-                
+
+            }, errorMessage => {
+
             })
         },
         useTestValues: function () {
             instanceIdThing.appKey = testInstanceIdObject.appKey
             instanceIdThing.deviceToken = testInstanceIdObject.deviceToken
             instanceIdThing.isFocused = true
+        },
+        sendNotifications: function () {
+            functions.sendNotifications = !functions.sendNotifications;
+        },
+        manageTopics: function () {
+            functions.showTopics = !functions.showTopics;
         }
+
     }
 });
+
 
 
 Vue.component('topic-item', {
@@ -363,38 +379,7 @@ function getInstanceIdInfo(instanceId, key, successCallback, failureCallback) {
             }
 
             successCallback(iidResponse);
-            // console.log(iidResponse)
-
-            // if (data.platform === "ANDROID") {
-            //     $("#platformIcon").text("phone_android")
-            // } else if (data.platform === "IOS") {
-            //     $("#platformIcon").text("phone_iphone")
-            // } else if (data.platform === "CHROME") {
-            //     $("#platformIcon").text("laptop_chromebook")
-            // }
-            // window.packageName = data.application
-            // var $response = $("#response");
-            // $response.show();
-
-            // $('#appName').text(data.application + " Version(" + data.applicationVersion + ")")
-            // $("#sendNotification").show();
-            // $("#manageTopics").show();
-            // if (data.rel !== undefined && data.rel.topics !== undefined) {
-            //     $("#topicDiv").show();
-            //     const $topicsList = $("#topicsList");
-            //     $topicsList.empty();
-            //     for (const topic in data.rel.topics) {
-            //         const topicName = topic;
-            //         var topicDate = data.rel.topics[topic].addDate;
-            //         console.log(topicName);
-            //         console.log(topicDate);
-            //         $topicsList.append(`<li id=${topicName} class="mdl-list__item mdl-list__item--two-line">
-            //         <span class="mdl-list__item-primary-content">Name: ${topicName}
-            //         <span class="mdl-list__item-sub-title">Subscribed On: ${topicDate}</span></span></li>`);
-            //     }
-
-            // }
-
+            
         },
         error: (xhr, status, error) => {
             const err = xhr.responseText;
