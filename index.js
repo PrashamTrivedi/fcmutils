@@ -62,14 +62,12 @@ var instanceIdThing = new Vue({
     }
 });
 
-var functions = new Vue({
-    el: "#functionality",
+var topics = new Vue({
+    el: "#topics",
     data: {
         showTopics: false,
-        sendNotifications: false,
         topicNames: '',
         toVerify: false
-
     },
     methods: {
         subscribeTopics: function () {
@@ -92,6 +90,14 @@ var functions = new Vue({
                 return ''
             }
         }
+    }
+})
+
+
+var notifications = new Vue({
+    el: "#notificationDiv",
+    data:{
+        sendNotifications: false
     }
 })
 
@@ -140,10 +146,10 @@ var visibility = new Vue({
             instanceIdThing.isFocused = true
         },
         sendNotifications: function () {
-            functions.sendNotifications = !functions.sendNotifications;
+            notifications.sendNotifications = !notifications.sendNotifications;
         },
         manageTopics: function () {
-            functions.showTopics = !functions.showTopics;
+            topics.showTopics = !topics.showTopics;
         }
 
     }
