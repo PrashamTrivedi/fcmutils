@@ -59,7 +59,7 @@
                 <div id="instanceIdFields">
 
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="appKeyObject">
                             <input class="mdl-textfield__input" type="text" id="txtApplicationKey" v-model="appKey" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
                             <span class="mdl-textfield__error">API Key is required</span>
@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="classObject">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="deviceTokenObject">
                             <input class="mdl-textfield__input" type="text" id="txtToken" v-model="deviceToken" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtToken">FCM Device token</label>
                             <span class="mdl-textfield__error">Device token is required</span>

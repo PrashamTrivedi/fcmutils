@@ -42,25 +42,29 @@ var instanceIdThing = new Vue({
     el: "#instanceIdFields",
     data: instanceIdObject,
     computed: {
-        classObject: function () {
-            console.log(this.appKey)
-            console.log(this.appKey != '' || this.appKey != undefined)
-            if (this.isFocused) {
-                return 'is-focused'
-            } else {
-                if (this.toValidate) {
-                    if (this.appKey == '' || this.appKey == undefined) {
-                        return 'is-invalid'
-                    } else if (this.deviceToken == '' || this.deviceToken == undefined) {
-                        return 'is-invalid'
-                    }
-                } else {
-                    return ''
-                }
-            }
+        appKeyObject: function () {
+            return changeClass(this.appKey, this.toValidate,this.isFocused)
+        },
+
+        deviceTokenObject: function () {
+            return changeClass(this.deviceToken, this.toValidate,this.isFocused)
         }
     }
 });
+
+function changeClass(keyToCheck, toValidate, isFocused) {
+    if (isFocused) {
+        return 'is-focused'
+    } else {
+        if (toValidate) {
+            if (keyToCheck == '' || keyToCheck == undefined) {
+                return 'is-invalid'
+            }
+        } else {
+            return ''
+        }
+    }
+}
 
 var topics = new Vue({
     el: "#topics",
@@ -96,10 +100,14 @@ var topics = new Vue({
 
 var notifications = new Vue({
     el: "#notificationDiv",
-    data:{
+    data: {
         sendNotifications: false
     }
-})
+});
+
+function ifStringEmpty(string) {
+    return string == '' || string == undefined || string == null ||string == 'null'
+}
 
 
 var visibility = new Vue({
@@ -115,30 +123,35 @@ var visibility = new Vue({
     },
     methods: {
         verifyToken: function () {
-            this.isLoading = true;
 
             instanceIdThing.toValidate = true
-            getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test => {
-                visibility.isLoading = false;
-                if (test != undefined) {
-                    console.log(test);
-                    console.log(test.rel.application);
-                    console.log(test.application);
-                    console.log(test.applicationVersion);
-                    this.hasResponse = true;
-                    this.application = test.application;
-                    this.platformIcon = test.platformIcon;
-                    this.applicationVersion = test.applicationVersion;
-                    this.topics = iidResponse.rel;
-                }
-                console.log(test);
+            if (ifStringEmpty(instanceIdObject.deviceToken) || ifStringEmpty(instanceIdObject.appKey)) {
 
-            }, errorMessage => {
-                this.hasResponse = false;
-                console.log(errorMessage);
-                visibility.isLoading = false;
-                this.errorMessage = errorMessage;
-            })
+            } else {
+                this.isLoading = true;
+
+                getInstanceIdInfo(instanceIdObject.deviceToken, instanceIdObject.appKey, test => {
+                    visibility.isLoading = false;
+                    if (test != undefined) {
+                        console.log(test);
+                        console.log(test.rel.application);
+                        console.log(test.application);
+                        console.log(test.applicationVersion);
+                        this.hasResponse = true;
+                        this.application = test.application;
+                        this.platformIcon = test.platformIcon;
+                        this.applicationVersion = test.applicationVersion;
+                        this.topics = iidResponse.rel;
+                    }
+                    console.log(test);
+
+                }, errorMessage => {
+                    this.hasResponse = false;
+                    console.log(errorMessage);
+                    visibility.isLoading = false;
+                    this.errorMessage = errorMessage;
+                })
+            }
         },
         useTestValues: function () {
             instanceIdThing.appKey = testInstanceIdObject.appKey
@@ -391,7 +404,7 @@ function updateTopics(topics, successFun, errorFun) {
     console.log(window.token);
     console.log(topics);
 
-    const topicArray = topics.split(",");
+    const topicArray = topics.split(",").map(function (topic) { return topic.trim() });
 
     topicArray.forEach(function (topic) {
         const settings = {
