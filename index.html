@@ -146,10 +146,15 @@
                     </a>
                 </h3>
                 <div class="sides">
-                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtTo" autocomplete="on">
+                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+                        <input class="mdl-textfield__input" type="text" value="" id="txtTo" readonly>
+                        <input type="hidden" name="txtTo" value="">
                         <label class="mdl-textfield__label" for="txtTo">To...</label>
                     </div>
+                    <ul for="txtTo" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        <notification-to v-for="name in names" v-bind:name="name" v-bind:key="name"></notification-to>
+                    </ul>
+
                     <div class="right topMargin50">
                         <i id="to" class="material-icons">help_outline</i>
                     </div>
