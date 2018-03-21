@@ -62,16 +62,45 @@ const dataOptions = {
     name: 'dataOption',
     template: `<li class="mdl-list__item">
     <div class="mdl-list__item-primary-content">
-        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" id="key${currentId}" autocomplete="on">
-            <label class="mdl-textfield__label" for="key${currentId}">Key</label>
+        <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="keyObject"  >
+            <input class="mdl-textfield__input" type="text" v-model="key" :id="'data'+currentid" autocomplete="on" @focus="changeFocus('key')" @change="addKey" >
+            <label class="mdl-textfield__label" :for="'data'+currentid">Key</label>
         </div>
-        <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0px 10px;">
-            <input class="mdl-textfield__input" type="text" id="val${currentId}" autocomplete="on">
-            <label class="mdl-textfield__label" for="val${currentId}">Value</label>
+        <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0px 10px;" :class="valueObject" >
+            <input class="mdl-textfield__input" type="text" v-model="value" :id="'value'+currentid" autocomplete="on" @change="addKey" @focus="changeFocus('value')">
+            <label class="mdl-textfield__label" :for="'value'+currentid">Value</label>
         </div>
     </div>
-</li>`
+</li>`,
+    data: function () {
+        return {
+            key: '',
+            value: '',
+            hasKeyFocus: false,
+            hasValueFocus: false
+        };
+    },
+    methods: {
+        addKey: function () {
+            dataPayload[this.key] = this.value
+        },
+        changeFocus: function (params) {
+            if (params == 'key') {
+                this.hasKeyFocus = true;
+            } else {
+                this.hasValueFocus = true;
+            }
+        }
+    },
+    computed: {
+        keyObject: function () {
+            return changeClass(this.key, false, this.hasKeyFocus)
+        },
+
+        valueObject: function () {
+            return changeClass(this.value, false, this.hasValueFocus)
+        }
+    }
 
 };
 
@@ -210,29 +239,45 @@ var notifications = new Vue({
         color: '',
         androidIcon: '',
         clickAction: '',
-        currentItems: 1
+        currentItems: 1,
+        dataKey: [],
+        dataValues: [],
+        validateTitle: false
 
     },
     methods: {
         prepareAndSendNotification: function () {
-            notification.to = this.notificationTo
-            notification.collapse_key = this.collapseKey
-            notification.priority = this.priority
-            notification.time_to_live = this.timeToLive
+            notification.to = this.notificationTo;
+            notification.collapse_key = this.collapseKey;
+            notification.priority = this.priority;
+            notification.time_to_live = this.timeToLive;
+            notification.dry_run = this.dryRun;
 
-            notificationPayload.title = this.title
-            notificationPayload.body = this.body
-            notificationPayload.sound = this.sound
-            notificationPayload.badge = this.badge
-            notificationPayload.icon = this.androidIcon
-            notificationPayload.color = this.color
-            notificationPayload.android_channel_id = this.channelId
-            notificationPayload.click_action = this.clickAction
+            this.validateTitle = this.sendNotificationPayload
+            if (this.sendNotificationPayload && !ifStringEmpty(this.title)) {
 
-            notification.notification = clean(notificationPayload)
+                notificationPayload.title = this.title;
+                notificationPayload.body = this.body;
+                notificationPayload.sound = this.sound;
+                notificationPayload.badge = this.badge;
+                notificationPayload.icon = this.androidIcon;
+                notificationPayload.color = this.color;
+                notificationPayload.android_channel_id = this.channelId;
+                notificationPayload.click_action = this.clickAction;
+
+                notification.notification = clean(notificationPayload);
+                notification.data = dataPayload;
+
+                sendNotificationObject(clean(notification))
+            } else if (!this.sendNotificationPayload) {
+
+                notification.data = dataPayload;
+
+                sendNotificationObject(clean(notification))
+            }
         },
         addDataObject: function () {
-            this.currentItems+=1;
+            this.currentItems += 1;
         }
     },
     computed: {
@@ -240,7 +285,7 @@ var notifications = new Vue({
             return changeClass(this.notificationTo, this.sendNotification, undefined)
         },
         titleObject: function () {
-            return changeClass(this.title, this.sendNotification, undefined)
+            return changeClass(this.title, this.validateTitle, undefined)
         }
     }
 });
@@ -316,57 +361,14 @@ var visibility = new Vue({
 
 
 
-
-
-
-
-
-
-//     $sendNotification.click(function () {
-//         $("#txtTo").val(window.token);
-
-//         $("#notificationDiv").show();
-//     });
-
-//     $("#updateTopics").click(function () {
-//         const $txtTopics = $("#txtTopics");
-//         const topics = $txtTopics.val();
-//         if (topics === "") {
-//             $txtTopics.prop('required', true);
-//             $txtTopics.parent().addClass('is-invalid');
-//         } else {
-//             $txtTopics.prop('required', false);
-//             $txtTopics.parent().removeClass('is-invalid');
-//         }
-//         componentHandler.upgradeDom();
-//         if (topics !== "") {
-//             updateTopics(topics);
-//         }
-//     });
-//     $manageTopics.click(function () {
-
-//         $("#topics").show()
-//     });
-
-//     $("#addKeyValue").click(function () {
-//         addKeyValue()
-//     });
-
-
-//     $("#send").click(function () {
-//         sendNotification();
-//     });
-// });
-
-
-function sendNotificationObject(cleanedData) {
+function sendNotificationObject(cleanedData, key) {
     const settings = {
         method: "POST",
         url: "https://fcm.googleapis.com/fcm/send",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(cleanedData),
         beforeSend: function (request) {
-            request.setRequestHeader("Authorization", "key=" + key);
+            request.setRequestHeader("Authorization", "key=" + instanceIdObject.appKey);
         },
         success: function (data) {
             console.log(this.url);
@@ -389,84 +391,6 @@ function sendNotificationObject(cleanedData) {
     $.ajax(settings)
 }
 
-function sendNotification() {
-    const to = $("#txtTo").val();
-    let timeToLive = parseInt($("#txtTimeToLive").val());
-    if (timeToLive === "" || isNaN(timeToLive)) {
-        timeToLive = 2419200
-    }
-    let priority = parseInt($("#txtPriority").val());
-    if (priority === "" || isNaN(priority)) {
-        priority = 5
-    }
-    const collapseKey = $("#txtCollapseKey").val();
-    const contentAvailable = $("#contentAvailable").prop('checked');
-    const dryRun = $("#dryRun").prop('checked');
-
-    const $txtTitle = $("#txtTitle");
-    const title = $txtTitle.val();
-    let notification = null;
-    if (title === "") {
-        $txtTitle.prop('required', true);
-        $txtTitle.parent().addClass('is-invalid');
-    } else {
-        $txtTitle.prop('required', false);
-        $txtTitle.parent().removeClass('is-invalid');
-    }
-    if (title !== "") {
-        const body = $("#txtBody").val();
-        const sound = $("#txtSound").val();
-        const badge = $("#txtBadge").val();
-        const tag = $("#txtTag").val();
-        const channel = $("#txtChannel").val();
-        const color = $("#txtColor").val();
-        const clickAction = $("#txtClickAction").val();
-        const icon = $("#txtIcon").val();
-
-        const notificationPayload = {
-            'title': title,
-            'body': body,
-            'sound': sound,
-            'badge': badge,
-            'android_channel_id': channel,
-            'icon': icon,
-            'color': color,
-            'tag': tag,
-            'click_action': clickAction
-        };
-
-
-        notification = clean(notificationPayload);
-
-    }
-    const dataPayload = {};
-    for (i = 0; i <= window.currentId; i++) {
-        const dataKey = $("[id^=key" + i + "]").val();
-        const dataValue = $("[id^=val" + i + "]").val();
-        dataPayload[dataKey] = dataValue;
-    }
-
-    const notificationData = {
-        'to': to,
-        'collapse_key': collapseKey,
-        'priority': priority,
-        'content_available': contentAvailable,
-        'time_to_live': timeToLive,
-        'dry_run': dryRun,
-        'notification': notification,
-        'data': dataPayload,
-        'restricted_package_name': window.packageName
-    };
-    const cleanedData = clean(notificationData);
-    console.log(cleanedData);
-    console.log(JSON.stringify(cleanedData));
-    sendNotificationObject(cleanedData, request, document, xhr, status, $)
-
-
-
-
-
-}
 
 function clean(obj) {
     const propNames = Object.getOwnPropertyNames(obj);
@@ -479,28 +403,7 @@ function clean(obj) {
     return obj;
 }
 
-function addKeyValue() {
-    window.currentId += 1;
-    console.log(window.currentId)
-    $("#dataKeyVal").append(`<li class="mdl-list__item">
-                        <div class="mdl-list__item-primary-content">
-                            <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="key${window.currentId}" autocomplete="on">
-                                <label class="mdl-textfield__label" for="key${window.currentId}">Key</label>
-                            </div>
-                            <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0px 10px;">
-                                <input class="mdl-textfield__input" type="text" id="val${window.currentId}" autocomplete="on">
-                                <label class="mdl-textfield__label" for="val${window.currentId}">Value</label>
-                            </div>
-                        </div>
-                    </li>`);
-
-    componentHandler.upgradeDom();
-}
-
 function getInstanceIdInfo(instanceId, key, successCallback, failureCallback) {
-    // window.key = key;
-    // window.token = instanceId;
     iidResponse = new Object();
     iidResponse.rel = [];
     const settings = {

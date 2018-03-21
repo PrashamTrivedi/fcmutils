@@ -59,7 +59,7 @@
                 <div id="instanceIdFields">
 
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="appKeyObject">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="appKeyObject">
                             <input class="mdl-textfield__input" type="text" id="txtApplicationKey" v-model="appKey" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtApplicationKey">FCM Api Key</label>
                             <span class="mdl-textfield__error">API Key is required</span>
@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="sides">
-                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="deviceTokenObject">
+                        <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="deviceTokenObject">
                             <input class="mdl-textfield__input" type="text" id="txtToken" v-model="deviceToken" autocomplete="on">
                             <label class="mdl-textfield__label" for="txtToken">FCM Device token</label>
                             <span class="mdl-textfield__error">Device token is required</span>
@@ -116,7 +116,7 @@
                 <div id="topicDiv" v-if="hasResponse" style="padding: 10px;">
                     <h4>Topics</h4>
                     <ul id="topicsList" class="mdl-list">
-                        <topic-item v-for="topic in topics" v-bind:topic="topic" v-bind:key="topic.name"></topic-item>
+                        <topic-item v-for="topic in topics" :topic="topic" :key="topic.name"></topic-item>
                     </ul>
                 </div>
             </div>
@@ -127,7 +127,7 @@
             <!-- V-if vs V-Show: V-if adds components manually without js and css bindings, while V:show toggles visibility -->
             <div id="topics" v-show="showTopics" class="center padding20 mdl-card mdl-shadow--2dp">
                 <h3>Add topics here</h3>
-                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="topicsObject">
+                <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="topicsObject">
                     <input class="mdl-textfield__input" type="text" id="txtTopics" v-model="topicNames" autocomplete="on">
                     <label class="mdl-textfield__label" for="txtTopics">Enter Topics to add(Separated by comma)</label>
                     <span class="mdl-textfield__error">Please enter topics to add</span>
@@ -146,7 +146,7 @@
                     </a>
                 </h3>
                 <div class="sides">
-                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="toObject">
+                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="toObject">
                         <input class="mdl-textfield__input" type="text" id="txtTo" v-model="notificationTo">
                         <label class="mdl-textfield__label" for="txtTo">To...</label>
                         <span class="mdl-textfield__error">API Key is required</span>
@@ -213,7 +213,7 @@
                     <h4>Notification Payload</h4>
 
 
-                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" :class="titleObject">
                         <input class="mdl-textfield__input" type="text" id="txtTitle" v-model="title" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtTitle">Title</label>
                         <span class="mdl-textfield__error">Can not send notification without title...</span>
@@ -290,7 +290,7 @@
                 <div id="dataPayload">
                     <h4>Data Payload</h4>
                     <ul id="dataKeyVal" class="mdl-list">
-                        <data-object v-for="index in currentItems" v-bind:currentid="index" v-bind:key="index"></data-object>
+                        <data-object v-for="index in currentItems" :currentid="index" :key="index"></data-object>
                     </ul>
 
                     <button id="addKeyValue" @click="addDataObject" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
