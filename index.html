@@ -90,16 +90,16 @@
             </div>
             <div id="responseVisibility">
                 <div class="mdl-card__actions mdl-card--border">
-                    <button id="verifyTokens" v-on:click="verifyToken" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="verifyTokens" @click="verifyToken" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Verify Tokens
                     </button>
-                    <button id="useTestValues" v-on:click="useTestValues" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="useTestValues" @click="useTestValues" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Use Test Values
                     </button>
-                    <button id="sendNotification" v-if="hasResponse" v-on:click="sendNotifications()" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="sendNotification" v-if="hasResponse" @click="sendNotifications()" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Send Notification
                     </button>
-                    <button id="manageTopics" v-if="hasResponse" v-on:click="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="manageTopics" v-if="hasResponse" @click="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Subscribe Topics
                     </button>
                 </div>
@@ -133,7 +133,7 @@
                     <span class="mdl-textfield__error">Please enter topics to add</span>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <button id="updateTopics" v-on:click="subscribeTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="updateTopics" @click="subscribeTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Add Topics
                     </button>
                 </div>
@@ -147,11 +147,11 @@
                 </h3>
                 <div class="sides">
                     <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="toObject">
-                        <input class="mdl-textfield__input" type="text" id="txtTo" v-model="notificationTo" >
+                        <input class="mdl-textfield__input" type="text" id="txtTo" v-model="notificationTo">
                         <label class="mdl-textfield__label" for="txtTo">To...</label>
                         <span class="mdl-textfield__error">API Key is required</span>
                     </div>
-                    
+
 
                     <div class="right topMargin50">
                         <i id="to" class="material-icons">help_outline</i>
@@ -162,7 +162,7 @@
                 </div>
                 <div class="sides">
                     <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="number" id="txtTimeToLive" autocomplete="on">
+                        <input class="mdl-textfield__input" type="number" id="txtTimeToLive" v-model="timeToLive" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtTimeToLive">Time To Live</label>
                     </div>
 
@@ -170,7 +170,7 @@
                 <div class="sides">
                     <div class="leftInverse" style="margin:0 10px 0 0;">
                         <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="padding: 30px;">
-                            <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on">
+                            <input class="mdl-textfield__input" type="number" min="5" max="10" step="5" id="txtPriority" autocomplete="on" v-model="priority">
                             <label class="mdl-textfield__label" for="txtPriority">Priority</label>
                         </div>
                         <div class="rightInverse topMargin50">
@@ -184,7 +184,7 @@
                     <div class="sides rightInverse" style="margin:0 10px;">
                         <div class="leftInverse">
                             <div class="leftInverse center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="txtCollapseKey" autocomplete="on">
+                                <input class="mdl-textfield__input" type="text" id="txtCollapseKey" v-model="collapseKey" autocomplete="on">
                                 <label class="mdl-textfield__label" for="txtCollapseKey">Collapse Key</label>
                             </div>
                             <div class="rightInverse topMargin50">
@@ -195,41 +195,41 @@
                             </div>
                         </div>
                         <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="contentAvailable" style="margin:50px 10px 0;">
-                            <input type="checkbox" id="contentAvailable" class="mdl-checkbox__input">
+                            <input type="checkbox" id="contentAvailable" v-model="contentAvailable" class="mdl-checkbox__input">
                             <span class="mdl-checkbox__label">Content Available</span>
                         </label>
                         <label class="rightInverse mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dryRun" style="margin:50px 10px 0;">
-                            <input type="checkbox" id="dryRun" class="mdl-checkbox__input">
+                            <input type="checkbox" id="dryRun" class="mdl-checkbox__input" v-model="dryRun">
                             <span class="mdl-checkbox__label">Dry Run</span>
                         </label>
                     </div>
                 </div>
                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="sendNotificationObject">
-                    <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" checked>
+                    <input type="checkbox" id="sendNotificationObject" class="mdl-switch__input" v-model="sendNotificationPayload" checked>
                     <span class="mdl-switch__label">Send Notification Payload</span>
                 </label>
-                <div id="notificationPayload">
+                <div id="notificationPayload" v-show="sendNotificationPayload">
 
                     <h4>Notification Payload</h4>
 
 
                     <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtTitle" autocomplete="on">
+                        <input class="mdl-textfield__input" type="text" id="txtTitle" v-model="title" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtTitle">Title</label>
                         <span class="mdl-textfield__error">Can not send notification without title...</span>
                     </div>
                     <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtBody" autocomplete="on">
+                        <input class="mdl-textfield__input" type="text" id="txtBody" v-model="body" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtBody">Body</label>
                     </div>
                     <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0; ">
-                        <input class="mdl-textfield__input" type="text" id="txtSound" autocomplete="on">
+                        <input class="mdl-textfield__input" type="text" id="txtSound" v-model="sound" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtSound">Sound</label>
                     </div>
                     <div class="sides">
                         <div>
                             <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 0;">
-                                <input class="mdl-textfield__input" type="text" id="txtBadge" autocomplete="on">
+                                <input class="mdl-textfield__input" type="text" id="txtBadge" v-model="badge" autocomplete="on">
                                 <label class="mdl-textfield__label" for="txtBadge">Badge(iOS)</label>
                             </div>
                             <div class="rightInverse" style="margin:20px 0 0 0;">
@@ -242,7 +242,7 @@
                         </div>
                         <div>
                             <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
-                                <input class="mdl-textfield__input" type="text" id="txtChannel" autocomplete="on">
+                                <input class="mdl-textfield__input" type="text" id="txtChannel" v-model="channelId" autocomplete="on">
                                 <label class="mdl-textfield__label" for="txtChannel">Channel Id(Android)</label>
                             </div>
                             <div class="rightInverse" style="margin:20px 0 0 0;">
@@ -254,7 +254,7 @@
                         </div>
                         <div>
                             <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 10px 0 5px;">
-                                <input class="mdl-textfield__input" type="text" id="txtTag" autocomplete="on">
+                                <input class="mdl-textfield__input" type="text" id="txtTag" v-model="tag" autocomplete="on">
                                 <label class="mdl-textfield__label" for="txtTag">Tag(Android)</label>
 
                             </div>
@@ -271,18 +271,18 @@
                     <div>
                         <div>
                             <label for="txtColor">Icon Color(Android)</label>
-                            <input type="color" id="txtColor" autocomplete="on">
+                            <input type="color" id="txtColor" v-model="color" autocomplete="on">
 
                         </div>
 
 
                     </div>
                     <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtIcon" autocomplete="on">
+                        <input class="mdl-textfield__input" type="text" id="txtIcon" v-model="androidIcon" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtIcon">Icon For Android</label>
                     </div>
                     <div class="center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="txtClickAction" autocomplete="on">
+                        <input class="mdl-textfield__input" type="text" id="txtClickAction" v-model="clickAction" autocomplete="on">
                         <label class="mdl-textfield__label" for="txtClickAction">Click Action</label>
                     </div>
                 </div>
@@ -290,30 +290,16 @@
                 <div id="dataPayload">
                     <h4>Data Payload</h4>
                     <ul id="dataKeyVal" class="mdl-list">
-                        <li class="mdl-list__item">
-                            <div class="mdl-list__item-primary-content">
-                                <div class="leftInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="key1" autocomplete="on">
-                                    <label class="mdl-textfield__label" for="key1">Key</label>
-                                </div>
-                                <div class="rightInverse mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin: 0 10px;">
-                                    <input class="mdl-textfield__input" type="text" id="val1" autocomplete="on">
-                                    <label class="mdl-textfield__label" for="val1">Value</label>
-                                </div>
-                            </div>
-
-                        </li>
-
-
+                        <data-object v-for="index in currentItems" v-bind:currentid="index" v-bind:key="index"></data-object>
                     </ul>
 
-                    <button id="addKeyValue" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="addKeyValue" @click="addDataObject" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Add
                     </button>
 
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <button id="send" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="send" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect" @click="prepareAndSendNotification">
                         Send Notification
                     </button>
                 </div>
