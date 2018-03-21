@@ -1,10 +1,3 @@
-var key;
-var token;
-var topics;
-var platform;
-var packageName;
-var currentId;
-
 
 var instanceIdObject = {
     appKey: '',

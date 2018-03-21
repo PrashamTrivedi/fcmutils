@@ -1,5 +1,5 @@
 # fcmutils
-Repository of FCM Utils
+Repository of FCM Utils.
 
 This repository is designed as a tool to work with FCM.
 
@@ -17,7 +17,6 @@ Using instance id api, it identifies device frrom given token. It will also give
 
 Reference : [InstanceId Server reference-Device Info](https://developers.google.com/instance-id/reference/server#get_information_about_app_instances)
 
-*More Details coming soon*
 
 ## Managing topics
 
@@ -27,8 +26,6 @@ Using above apis it will know topics subscribed to given device and will let you
 
 Reference : [InstanceId Server reference-Managing Topics](https://developers.google.com/instance-id/reference/server#create_relationship_maps_for_app_instances)
 
-*This api currently supports adding topics, removing topics is not supported as of now*
-
 ## Construct and send notification
 
 Construct notifications using `notification` and `data` payloads and will send it to devices or topic. 
@@ -37,3 +34,9 @@ Construct notifications using `notification` and `data` payloads and will send i
 More documentations coming soon
 
 Test it at https://prashamtrivedi.github.io/fcmutils/
+
+# TODOs
+- [ ] Migrate to Firebase Admin Api.
+- [ ] Use FCM server v1 to send notifications.
+- [ ] Update UI receiving new objects.
+- [ ] Split code properly and add testing.

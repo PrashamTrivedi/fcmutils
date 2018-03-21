@@ -1,3 +1,9 @@
+## (3.0)21-03
+- Rewrote whole site with VueJs.
+- Fine grained error reporting.
+- Ability to select to target.
+- Added functionality to have pre-filled testing values.
+
 ## (1.3)18-09
 - Sending notification object is optional, and user can change the flag
 - 1.3.1 A small bugfix
