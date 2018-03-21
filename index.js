@@ -53,8 +53,11 @@ var instanceIdThing = new Vue({
 });
 
 function changeClass(keyToCheck, toValidate, isFocused) {
+    if(isFocused == undefined){
+        isFocused = !ifStringEmpty(keyToCheck);
+    }
     if (isFocused) {
-        return 'is-focused'
+        return 'is-focused';
     } else {
         if (toValidate) {
             if (keyToCheck == '' || keyToCheck == undefined) {
@@ -102,30 +105,28 @@ function getToNames() {
     if (!ifStringEmpty(instanceIdObject.deviceToken)) {
         namesArray.push(instanceIdObject.deviceToken);
     }
-    if(iidResponse!=undefined && !isListEmpty(iidResponse.rel) )
-    namesArray = namesArray.concat(iidResponse.rel.filter(function(topic){ return topic!=undefined }).map(function (topic) {
-        return `/to/${topic.name}`
-    }));
+    if (iidResponse != undefined && !isListEmpty(iidResponse.rel))
+        namesArray = namesArray.concat(iidResponse.rel.filter(function (topic) {
+            return topic != undefined
+        }).map(function (topic) {
+            return `/to/${topic.name}`
+        }));
     return namesArray;
 }
 
 function isListEmpty(list) {
-    return (list==undefined && list.length==0);
+    return (list == undefined && list.length == 0);
 }
 
 var notifications = new Vue({
     el: "#notificationDiv",
     data: {
-        sendNotifications: false,
-        names: getToNames()
+        sendNotification: false,
+        notificationTo: ""
     },
     computed: {
         toObject: function () {
-            if (this.toVerify && (this.topicNames == '' || this.topicNames == undefined)) {
-                return 'is-invalid'
-            } else {
-                return ''
-            }
+            return changeClass(this.notificationTo,this.sendNotification,undefined)
         }
     }
 });
@@ -167,7 +168,7 @@ var visibility = new Vue({
                         this.platformIcon = test.platformIcon;
                         this.applicationVersion = test.applicationVersion;
                         this.topics = iidResponse.rel;
-                        
+
                     }
                     console.log(test);
 
@@ -184,10 +185,13 @@ var visibility = new Vue({
             instanceIdThing.deviceToken = testInstanceIdObject.deviceToken
             instanceIdThing.isFocused = true
         },
-        sendNotifications: function () {
-            notifications.names = getToNames();
-            console.log(notifications.names);
-            notifications.sendNotifications = !notifications.sendNotifications;
+        sendNotifications: function (name) {
+            if(ifStringEmpty(name)){
+                name = instanceIdObject.deviceToken;
+            }
+            notifications.notificationTo = name;
+            console.log(notifications.notificationTo);
+            notifications.sendNotification = !notifications.sendNotification;
         },
         manageTopics: function () {
             topics.showTopics = !topics.showTopics;
@@ -206,7 +210,14 @@ Vue.component('topic-item', {
     props: ['topic'],
     template: `<li  class="mdl-list__item mdl-list__item--two-line">
             <span class="mdl-list__item-primary-content">Name: {{topic.name}}
-            <span class="mdl-list__item-sub-title">Subscribed On: {{topic.addDate}}</span></span></li>`
+            <span class="mdl-list__item-sub-title">Subscribed On: {{topic.addDate}}</span></span>
+            <span class="mdl-list__item-secondary-action">
+            <button id="sendNotification"  @click="sendNotifications(topic.name)" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+            Send Notification
+        </button>
+</span></span>
+        
+            </li>`
 });
 
 //     $sendNotification.click(function () {

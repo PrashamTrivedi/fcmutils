@@ -96,7 +96,7 @@
                     <button id="useTestValues" v-on:click="useTestValues" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Use Test Values
                     </button>
-                    <button id="sendNotification" v-if="hasResponse" v-on:click="sendNotifications" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
+                    <button id="sendNotification" v-if="hasResponse" v-on:click="sendNotifications()" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
                         Send Notification
                     </button>
                     <button id="manageTopics" v-if="hasResponse" v-on:click="manageTopics" class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">
@@ -139,21 +139,19 @@
                 </div>
             </div>
 
-            <div id="notificationDiv" v-show="sendNotifications" class="center padding20 mdl-card mdl-shadow--2dp">
+            <div id="notificationDiv" v-show="sendNotification" class="center padding20 mdl-card mdl-shadow--2dp">
 
                 <h3>Notification
                     <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">(Server Reference)
                     </a>
                 </h3>
                 <div class="sides">
-                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
-                        <input class="mdl-textfield__input" type="text" value="" id="txtTo" readonly>
-                        <input type="hidden" name="txtTo" value="">
+                    <div class="left center mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-bind:class="toObject">
+                        <input class="mdl-textfield__input" type="text" id="txtTo" v-model="notificationTo" >
                         <label class="mdl-textfield__label" for="txtTo">To...</label>
+                        <span class="mdl-textfield__error">API Key is required</span>
                     </div>
-                    <ul for="txtTo" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                        <notification-to v-for="name in names" v-bind:name="name" v-bind:key="name"></notification-to>
-                    </ul>
+                    
 
                     <div class="right topMargin50">
                         <i id="to" class="material-icons">help_outline</i>
