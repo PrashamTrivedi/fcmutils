@@ -221,7 +221,7 @@ var notifications = new Vue({
         collapseKey: "",
         contentAvailable: false,
         dryRun: false,
-        sendNotificationPayload: falses,
+        sendNotificationPayload: false,
         title: '',
         body: '',
         sound: '',
