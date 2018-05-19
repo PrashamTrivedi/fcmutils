@@ -1,4 +1,4 @@
-##(3.1)20-05
+## (3.1)20-05
 - Fixes #1
 - Fixes #2
 - Changed default values of dry run and notification payload
