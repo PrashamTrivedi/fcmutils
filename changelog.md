@@ -1,3 +1,9 @@
+##(3.1)20-05
+- Fixes #1
+- Fixes #2
+- Changed default values of dry run and notification payload
+- Now on Vue Min js
+
 ## (3.0)21-03
 - Rewrote whole site with VueJs.
 - Fine grained error reporting.

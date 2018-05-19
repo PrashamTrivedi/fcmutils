@@ -1,4 +1,3 @@
-
 var instanceIdObject = {
     appKey: '',
     deviceToken: '',
@@ -126,7 +125,7 @@ var app = new Vue({
     el: '#version',
 
     data: {
-        version: '3'
+        version: '3.1'
     },
 
 
@@ -221,8 +220,8 @@ var notifications = new Vue({
         priority: 5,
         collapseKey: "",
         contentAvailable: false,
-        dryRun: true,
-        sendNotificationPayload: true,
+        dryRun: false,
+        sendNotificationPayload: falses,
         title: '',
         body: '',
         sound: '',
@@ -367,9 +366,17 @@ function sendNotificationObject(cleanedData, key) {
             console.log(this.url);
             console.log(this.data);
             console.log("Sent");
-            document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({
-                'message': 'Notification Sent'
-            });
+            if (data.failure >= 0) {
+                console.log(data);
+                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({
+                    'message': 'Notification Not Sent,Reason '+data.results[0]["error"]
+                });
+            } else {
+
+                document.querySelector("#snackBar").MaterialSnackbar.showSnackbar({
+                    'message': 'Notification Sent'
+                });
+            }
         },
         error: function (xhr, status, error) {
             const err = xhr.responseText;
@@ -389,6 +396,9 @@ function clean(obj) {
     const propNames = Object.getOwnPropertyNames(obj);
     for (let i = 0; i < propNames.length; i++) {
         const propName = propNames[i];
+        // if (typeof obj[propName] == "object") {
+        //     clean(obj[propName]);
+        // }
         if (obj[propName] === null || obj[propName] === undefined || obj[propName] === "") {
             delete obj[propName];
         }
